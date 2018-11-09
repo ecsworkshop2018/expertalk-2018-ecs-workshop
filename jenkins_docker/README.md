@@ -11,13 +11,16 @@
 ### Build docker image and push to docker hub
 
 ```bash
-docker build -t docker-hub-registry/jenkins .
+docker build -t your-namespace/jenkins .
 docker login
-docker push docker-hub-registry/jenkins
+docker push your-namespace/jenkins
 ```
 
 ### Running the container
 
 ```bash
-docker run -p 8080:8080 -p 50000:50000 --name jenkins -d docker-hub-registry/jenkins:latest
+docker run -p 8080:8080 -p 50000:50000 --name jenkins \
+    -v jenkins_home:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    -d your-namespace/jenkins:latest
 ```
