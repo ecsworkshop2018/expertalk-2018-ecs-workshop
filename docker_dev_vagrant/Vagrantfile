@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  config.vm.synced_folder "..", "/repo"
+  config.vm.synced_folder "..", "~/repo"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -96,6 +96,23 @@ Vagrant.configure("2") do |config|
     apt-get update
     apt-get install -y docker-ce
     usermod -aG docker vagrant
+  SHELL
+
+  config.vm.provision "file", source: "~/accessKeys.csv", destination: "accessKeys.csv"
+
+  config.vm.provision "set-credentials", type: "shell", inline: <<-SHELL
+    apt-get install -y csvtool
+
+    ACCESS_KEY="$(csvtool sub 2 1 1 1 accessKeys.csv)"
+    SECRETE_KEY="$(csvtool sub 2 2 1 1 accessKeys.csv)"
+
+    su - vagrant -c "aws configure set profile.ecs-workshop.aws_access_key_id $ACCESS_KEY"
+
+    su - vagrant -c "aws configure set profile.ecs-workshop.aws_secret_access_key $SECRETE_KEY"
+
+    su - vagrant -c "aws configure set profile.ecs-workshop.region ap-south-1"
+
+    su - vagrant -c "aws configure set profile.ecs-workshop.output json"
   SHELL
 
 end
