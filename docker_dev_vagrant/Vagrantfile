@@ -45,7 +45,7 @@ Vagrant.configure("2") do |config|
   # the path on the guest to mount the folder. And the optional third
   # argument is a set of non-required options.
   # config.vm.synced_folder "../data", "/vagrant_data"
-  config.vm.synced_folder "..", "~/repo"
+  config.vm.synced_folder "..", "/home/vagrant/repo"
 
   # Provider-specific configuration so you can fine-tune various
   # backing providers for Vagrant. These expose provider-specific options.
@@ -65,7 +65,8 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  config.vm.provision "shell", inline: <<-SHELL
+
+  config.vm.provision "install-aws-cli", type: "shell", inline: <<-SHELL
     apt-get update
 
     # add python as alias for python3
@@ -78,18 +79,18 @@ Vagrant.configure("2") do |config|
     su -c 'pip3 install awscli --upgrade --user' vagrant
   SHELL
 
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "install-jq", type: "shell", inline: <<-SHELL
     apt-get install -y jq
   SHELL
 
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "install-terraform", type: "shell", inline: <<-SHELL
     apt-get install -y unzip
     cd /tmp
     wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
     unzip -d /usr/local/bin terraform_0.11.10_linux_amd64.zip
   SHELL
 
-  config.vm.provision "shell", inline: <<-SHELL
+  config.vm.provision "install-docker", type: "shell", inline: <<-SHELL
     apt-get install -y apt-transport-https ca-certificates curl software-properties-common
     curl -fsSL https://download.docker.com/linux/ubuntu/gpg | apt-key add -
     add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
@@ -98,20 +99,17 @@ Vagrant.configure("2") do |config|
     usermod -aG docker vagrant
   SHELL
 
-  config.vm.provision "file", source: "~/accessKeys.csv", destination: "accessKeys.csv"
+  config.vm.provision "copy-credentials", type: "file", source: "~/accessKeys.csv", destination: "accessKeys.csv"
 
   config.vm.provision "set-credentials", type: "shell", inline: <<-SHELL
     apt-get install -y csvtool
 
     ACCESS_KEY="$(csvtool sub 2 1 1 1 accessKeys.csv)"
-    SECRETE_KEY="$(csvtool sub 2 2 1 1 accessKeys.csv)"
+    SECRET_KEY="$(csvtool sub 2 2 1 1 accessKeys.csv)"
 
-    su - vagrant -c "aws configure set profile.ecs-workshop.aws_access_key_id $ACCESS_KEY"
-
-    su - vagrant -c "aws configure set profile.ecs-workshop.aws_secret_access_key $SECRETE_KEY"
-
+    su - vagrant -c "aws configure set profile.ecs-workshop.aws_access_key_id ${ACCESS_KEY}"
+    su - vagrant -c "aws configure set profile.ecs-workshop.aws_secret_access_key ${SECRET_KEY}"
     su - vagrant -c "aws configure set profile.ecs-workshop.region ap-south-1"
-
     su - vagrant -c "aws configure set profile.ecs-workshop.output json"
   SHELL
 
