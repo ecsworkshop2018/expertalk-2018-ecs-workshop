@@ -1,12 +1,18 @@
-variable "vpc_id" {}
+variable "region" {}
 
 variable "name" {}
 
 variable "environment" {}
 
-variable "public_subnet_id" {}
+variable "vpc_cidr" {}
 
-variable "main_route_table_id" {}
+variable "public_subnet_cidrs" {
+  type = "list"
+}
+
+variable "private_subnet_cidrs" {
+  type = "list"
+}
 
 variable "destination_cidr_block" {
   description = "The CIDR block of the outbound route table routes"
