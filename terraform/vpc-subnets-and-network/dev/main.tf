@@ -2,8 +2,8 @@ terraform {
   required_version = "= 0.11.10"
 
   backend "s3" {
-    bucket  = "prod-ecs-workshop-terraform-state"
-    key     = "prod-vpc-subnets-and-network.tfstate"
+    bucket  = "dev-ecs-workshop-terraform-state"
+    key     = "dev-vpc-subnets-and-network.tfstate"
     region  = "ap-south-1"
     profile = "ecs-workshop"
     encrypt = true
@@ -11,7 +11,7 @@ terraform {
 }
 
 locals {
-  environment = "prod"
+  environment = "dev"
   region      = "ap-south-1"
 }
 
@@ -25,7 +25,7 @@ module "vpc" {
   source      = "../../../terraform-modules/vpc"
   name        = "${local.environment}-ecs-workshop-vpc"
   environment = "${local.environment}"
-  cidr        = "172.30.0.0/20"
+  cidr        = "172.29.0.0/20"
   region      = "${local.region}"
 }
 
@@ -36,7 +36,7 @@ module "public_subnet_1" {
   vpc_id         = "${module.vpc.vpc_id}"
   az             = "${local.region}a"
   is_public      = true
-  cidr           = "172.30.0.0/22"
+  cidr           = "172.29.0.0/22"
   route_table_id = "${module.vpc.main_route_table_id}"
 }
 
@@ -47,7 +47,7 @@ module "public_subnet_2" {
   vpc_id         = "${module.vpc.vpc_id}"
   az             = "${local.region}b"
   is_public      = true
-  cidr           = "172.30.4.0/22"
+  cidr           = "172.29.4.0/22"
   route_table_id = "${module.vpc.main_route_table_id}"
 }
 
@@ -67,7 +67,7 @@ module "private_subnet_1" {
   vpc_id         = "${module.vpc.vpc_id}"
   az             = "${local.region}a"
   is_public      = false
-  cidr           = "172.30.8.0/22"
+  cidr           = "172.29.8.0/22"
   route_table_id = "${module.routes.private_route_table_id}"
 }
 
@@ -78,6 +78,6 @@ module "private_subnet_2" {
   vpc_id         = "${module.vpc.vpc_id}"
   az             = "${local.region}b"
   is_public      = false
-  cidr           = "172.30.12.0/22"
+  cidr           = "172.29.12.0/22"
   route_table_id = "${module.routes.private_route_table_id}"
 }
