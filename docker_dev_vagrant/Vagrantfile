@@ -113,4 +113,8 @@ Vagrant.configure("2") do |config|
     su - vagrant -c "aws configure set profile.ecs-workshop.output json"
   SHELL
 
+  config.vm.provision "pull-jenkins-image", type: "shell", inline: <<-SHELL
+    docker pull jenkins/jenkins:lts
+  SHELL
+
 end
