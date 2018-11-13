@@ -81,8 +81,8 @@ pom.xml.next
 release.properties
 
 #####=== Terraform ===#####
-*.tfstate
-*.tfstate.*.backup
+terraform.tfstate.*.backup
+terraform.tfstate.backup
 .terraform/
 tfplan.out
 
