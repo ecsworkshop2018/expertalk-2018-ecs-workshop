@@ -4,7 +4,7 @@ terraform {
   backend "s3" {
     bucket  = "prod-ecs-workshop-terraform-state"
     key     = "prod-vpc-subnets-and-network.tfstate"
-    region  = "ap-south-1"
+    region  = "us-east-1"
     profile = "ecs-workshop"
     encrypt = true
   }
@@ -12,7 +12,7 @@ terraform {
 
 locals {
   environment = "prod"
-  region      = "ap-south-1"
+  region      = "us-east-1"
 }
 
 provider "aws" {

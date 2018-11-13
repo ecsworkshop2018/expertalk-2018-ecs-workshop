@@ -3,7 +3,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "ap-south-1"
+  region  = "us-east-1"
   profile = "ecs-workshop"
   version = "= 1.43.0"
 }
@@ -11,7 +11,7 @@ provider "aws" {
 resource "aws_s3_bucket" "terraform_state_storage" {
   bucket = "ecs-workshop-jenkins-terraform-state"
   acl    = "private"
-  region = "ap-south-1"
+  region = "us-east-1"
 
   tags {
     Name        = "ecs-workshop-jenkins-terraform-state"
