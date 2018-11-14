@@ -85,6 +85,5 @@ terraform.tfstate.*.backup
 terraform.tfstate.backup
 .terraform/
 tfplan.out
-
-
-
+*tf_plan
+*errored.tfstate

@@ -23,15 +23,11 @@ data "aws_vpc" "dev_vpc" {
   }
 }
 
-data aws_availability_zones all {}
-
-data "aws_subnet" "dev_vpc_public_subnets" {
-  vpc_id            = "${data.aws_vpc.dev_vpc.id}"
-  count             = "${length(data.aws_availability_zones.all.names)}"
-  availability_zone = "${element(data.aws_availability_zones.all.names, count.index)}"
+data "aws_subnet_ids" "dev_vpc_public_subnet_ids" {
+  vpc_id = "${data.aws_vpc.dev_vpc.id}"
 
   tags {
-    Name = "dev-ecs-workshop-public-subnet-${count.index}"
+    Type = "public"
   }
 }
 
@@ -42,7 +38,7 @@ module "alb" {
   alb_access_cidr_blocks      = ["0.0.0.0/0"]
   alb_access_ipv6_cidr_blocks = ["::/0"]
   environment                 = "jenkins"
-  public_subnet_ids           = ["${data.aws_subnet.dev_vpc_public_subnets.*.id}"]
+  public_subnet_ids           = ["${data.aws_subnet_ids.dev_vpc_public_subnet_ids.ids}"]
 }
 
 resource "aws_ecs_cluster" "jenkins_cluster" {
@@ -50,7 +46,7 @@ resource "aws_ecs_cluster" "jenkins_cluster" {
 }
 
 resource aws_launch_configuration "jenkins_lc" {
-  image_id = "ami-05f009513cd58ac90" // ECS AMI
+  image_id = "ami-07eb698ce660402d2" // ECS AMI
   instance_type = "m3.medium"
 
   security_groups = []

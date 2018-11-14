@@ -41,19 +41,17 @@ resource "aws_security_group_rule" "efs_client_sg_allow_all_egress_access" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-data "aws_subnet" "dev_vpc_private_subnets" {
+data "aws_subnet_ids" "dev_vpc_private_subnet_ids" {
   vpc_id = "${data.aws_vpc.dev_vpc.id}"
-  count = "${length(data.aws_availability_zones.all.names)}"
-  availability_zone="${element(data.aws_availability_zones.all.names, count.index)}"
 
   tags {
-    Name = "dev-ecs-workshop-private-subnet-${count.index}"
+    Type = "private"
   }
 }
 
 resource "aws_efs_mount_target" "efs_mount_target" {
-  count = "${length(data.aws_subnet.dev_vpc_private_subnets.*.id)}"
+  count = "${length(data.aws_subnet_ids.dev_vpc_private_subnet_ids.ids)}"
   file_system_id  = "${aws_efs_file_system.efs_jenkins_file_system.id}"
-  subnet_id       = "${element(data.aws_subnet.dev_vpc_private_subnets.*.id, count.index)}"
+  subnet_id       = "${element(data.aws_subnet_ids.dev_vpc_private_subnet_ids.ids, count.index)}"
   security_groups = ["${aws_security_group.efs_sg.id}"]
 }
