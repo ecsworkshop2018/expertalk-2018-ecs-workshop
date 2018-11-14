@@ -2,12 +2,12 @@ terraform {
   required_version = "= 0.11.10"
 
   backend "s3" {
-    bucket  = "ecs-workshop-jenkins-terraform-state"
+    bucket  = "ecs-workshop-terraform-state-jenkins"
     key     = "jenkins.tfstate"
     region  = "us-east-1"
     profile = "ecs-workshop"
     encrypt = true
-    lock_table = ""
+    dynamodb_table = "Terraform-Lock-Table"
   }
 }
 
