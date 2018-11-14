@@ -1,7 +1,11 @@
+locals  {
+  efs_volume_name = "efs-jenkins"
+}
+
 resource "aws_efs_file_system" "efs_jenkins_file_system" {
-  creation_token = "efs-jenkins"
+  creation_token = "${local.efs_volume_name}"
   tags {
-    Name = "efs-jenkins"
+    Name = "${local.efs_volume_name}"
   }
 }
 

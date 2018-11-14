@@ -12,7 +12,7 @@ terraform {
 }
 
 provider "aws" {
-  region  = "us-east-1"
+  region  = "${local.region}"
   profile = "ecs-workshop"
   version = "= 1.43.0"
 }
@@ -52,6 +52,7 @@ resource aws_launch_configuration "jenkins_lc" {
   security_groups = []
 
   user_data = <<-EOF
+              ${data.template_file.user_data_efs_mount_part.rendered}
 			  cat <<'CONFIG' >> /etc/ecs/ecs.config
 			  ECS_CLUSTER=${aws_ecs_cluster.jenkins_cluster.name}
 			  ECS_ENABLE_TASK_IAM_ROLE=true
@@ -70,14 +71,68 @@ resource aws_launch_configuration "jenkins_lc" {
   }
 }
 
+resource aws_autoscaling_group "jenkins_asg" {
+  name = "jenkins-asg"
+  max_size = 1
+  min_size = 1
+  health_check_grace_period = 300
+  health_check_type = "EC2"
+  launch_configuration = "${aws_launch_configuration.jenkins_lc.name}"
+  vpc_zone_identifier = ["${data.aws_subnet_ids.dev_vpc_private_subnet_ids.ids}"]
+  default_cooldown = 300
+
+  initial_lifecycle_hook {
+    name                 = "asg-drain-before-terminate-hook"
+    default_result       = "CONTINUE"
+    heartbeat_timeout    = "600"
+    lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
+    notification_metadata = <<EOF
+    {
+      "cluster-name": "${aws_ecs_cluster.jenkins_cluster.name}"
+    }
+    EOF
+    //notification_target_arn = "${var.ecs_asg_drain_container_instances_lambda_events_queue}"
+    //role_arn = "${aws_iam_role.ecs_asg_notification_access_role.arn}"
+  }
+
+  enabled_metrics = [
+    "GroupStandbyInstances",
+    "GroupTotalInstances",
+    "GroupPendingInstances",
+    "GroupTerminatingInstances",
+    "GroupDesiredCapacity",
+    "GroupInServiceInstances",
+    "GroupMinSize",
+    "GroupMaxSize",
+  ]
+
+  tag {
+    key                 = "Name"
+    value               = "jenkins-ecs-asg-ec2"
+    propagate_at_launch = true
+  }
+
+  tag {
+    key                 = "Description"
+    value               = "EC2 ASG for jenkins ECS cluster"
+    propagate_at_launch = true
+  }
+
+}
+
 data "template_file" "user_data_efs_mount_part" {
   template = "${file("${path.module}/user_data_efs_mount_part.tpl")}"
 
   vars {
     file_system_id = "${aws_efs_file_system.efs_jenkins_file_system.id}"
-    efs_directory  = "/var/jenkins_home"
+    efs_directory  = "${local.efs_host_path}"
     cluster_name   = "${aws_ecs_cluster.jenkins_cluster.name}"
   }
+}
+
+locals {
+  efs_host_path = "/var/jenkins_home"
+  region = "us-east-1"
 }
 
 
