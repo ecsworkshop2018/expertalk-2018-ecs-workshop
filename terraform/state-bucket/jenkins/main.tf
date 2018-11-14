@@ -26,3 +26,7 @@ resource "aws_s3_bucket" "terraform_state_storage" {
     prevent_destroy = true
   }
 }
+
+resource "aws_ecr_repository" "ecs_workshop_jenkins" {
+  name = "ecs-workshop/jenkins"
+}
