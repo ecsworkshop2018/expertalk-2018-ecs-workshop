@@ -107,10 +107,10 @@ Vagrant.configure("2") do |config|
     ACCESS_KEY="$(csvtool sub 2 1 1 1 accessKeys.csv)"
     SECRET_KEY="$(csvtool sub 2 2 1 1 accessKeys.csv)"
 
-    su - vagrant -c "aws configure set profile.ecs-workshop.aws_access_key_id ${ACCESS_KEY}"
-    su - vagrant -c "aws configure set profile.ecs-workshop.aws_secret_access_key ${SECRET_KEY}"
-    su - vagrant -c "aws configure set profile.ecs-workshop.region us-east-1"
-    su - vagrant -c "aws configure set profile.ecs-workshop.output json"
+    su - vagrant -c "aws configure set aws_access_key_id ${ACCESS_KEY}"
+    su - vagrant -c "aws configure set aws_secret_access_key ${SECRET_KEY}"
+    su - vagrant -c "aws configure set default.region us-east-1"
+    su - vagrant -c "aws configure set default.output json"
   SHELL
 
   config.vm.provision "pull-jenkins-image", type: "shell", inline: <<-SHELL
