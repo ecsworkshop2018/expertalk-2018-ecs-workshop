@@ -50,7 +50,7 @@ data "template_file" "container_definitions_json" {
 
   vars {
     service_name       = "${local.service_name}"
-    docker_image       = "038062473746.dkr.ecr.us-east-1.amazonaws.com/ecs-workshop/jenkins:latest"
+    docker_image       = "738035286324.dkr.ecr.us-east-1.amazonaws.com/ecs-workshop/jenkins:latest"
     container_port     = "${local.jenkins_container_port}"
     log_group          = "${local.jenkins_log_group_name}"
     memory_reservation = 1536
