@@ -117,16 +117,19 @@ Vagrant.configure("2") do |config|
     docker pull jenkins/jenkins:lts
   SHELL
 
-  config.vm.provision "setup-virtualenv", type: "shell", inline: <<-SHELL
-    su -c 'pip3 install virtualenv' vagrant
+  config.vm.provision "setup-virtualenv", type: "shell", privileged: false, inline: <<-SHELL
+    pip3 install virtualenv
   SHELL
 
-  config.vm.provision "setup-oh-my-zsh", type: "shell", inline: <<-SHELL
+  config.vm.provision "install-zsh", type: "shell", inline: <<-SHELL
     apt-get install -y zsh
-    sh -c "$(wget https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)" vagrant
     chsh -s $(which zsh) vagrant
-    cp -r /root/.oh-my-zsh /home/vagrant/.oh-my-zsh
-    chown -R vagrant:vagrant /home/vagrant/.oh-my-zsh
-    cp /home/vagrant/.oh-my-zsh/templates/zshrc.zsh-template /home/vagrant/.zshrc
+  SHELL
+
+  config.vm.provision "setup-oh-my-zsh", type: "shell", privileged: false, inline: <<-SHELL
+    rm -rf ~/.oh-my-zsh
+    git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
+    cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
+    echo 'PROMPT="%{$fg[red]%}%n%{$reset_color%} ${PROMPT}"' >> ~/.zshrc
   SHELL
 end
