@@ -53,16 +53,14 @@ resource "aws_key_pair" "jenkins_ssh_key" {
 resource aws_launch_configuration "jenkins_lc" {
   image_id = "ami-07eb698ce660402d2" // ECS AMI
   instance_type = "m3.medium"
+  iam_instance_profile = "${aws_iam_instance_profile.jenkins_instance_profile.name}"
 
-  security_groups = ["${aws_security_group.jenkins_ec2_sg.id}"]
+  security_groups = ["${aws_security_group.jenkins_ec2_sg.id}", "${aws_security_group.efs_client_sg.id}"]
 
   user_data = <<-EOF
+              #!/bin/bash
               ${data.template_file.user_data_efs_mount_part.rendered}
-              cat <<'CONFIG' >> /etc/ecs/ecs.config
-              ECS_CLUSTER=${aws_ecs_cluster.jenkins_cluster.name}
-              ECS_ENABLE_TASK_IAM_ROLE=true
-              ECS_ENABLE_TASK_IAM_ROLE_NETWORK_HOST=true
-              CONFIG
+              ${data.template_file.user_data_ecs_cluster_part.rendered}
               EOF
 
   lifecycle = {
@@ -133,6 +131,14 @@ data "template_file" "user_data_efs_mount_part" {
   vars {
     file_system_id = "${aws_efs_file_system.efs_jenkins_file_system.id}"
     efs_directory  = "${local.efs_host_path}"
+    cluster_name   = "${aws_ecs_cluster.jenkins_cluster.name}"
+  }
+}
+
+data "template_file" "user_data_ecs_cluster_part" {
+  template = "${file("${path.module}/user_data_ecs_cluster_part.tpl")}"
+
+  vars {
     cluster_name   = "${aws_ecs_cluster.jenkins_cluster.name}"
   }
 }

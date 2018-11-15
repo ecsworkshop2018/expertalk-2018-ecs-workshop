@@ -9,7 +9,7 @@ resource "aws_alb_target_group" "alb_jenkins_target_group" {
   health_check {
     protocol            = "HTTP"
     path                = "${local.jenkins_context_path}"
-    matcher             = "200"
+    matcher             = "200,302"
     interval            = "10"
     timeout             = "5"
     healthy_threshold   = "3"
@@ -28,5 +28,19 @@ resource "aws_alb_listener_rule" "service_listner_rule" {
   condition {
     field  = "path-pattern"
     values = ["${local.jenkins_context_path}"]
+  }
+}
+
+resource "aws_alb_listener_rule" "service_listner_rule_star" {
+  listener_arn = "${module.alb.alb_http_listener_arn}"
+
+  action {
+    type             = "forward"
+    target_group_arn = "${aws_alb_target_group.alb_jenkins_target_group.arn}"
+  }
+
+  condition {
+    field  = "path-pattern"
+    values = ["${local.jenkins_context_path}/*"]
   }
 }
