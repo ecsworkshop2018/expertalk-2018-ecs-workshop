@@ -6,8 +6,7 @@ import boto3
 IN_SERVICE_TIMEOUT = 600
 IN_SERVICE_INTERVAL = 20
 
-session = boto3.session.Session(profile_name='ecs-workshop')
-client = session.client('autoscaling')
+client = boto3.client('autoscaling')
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
