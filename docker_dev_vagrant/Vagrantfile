@@ -117,4 +117,8 @@ Vagrant.configure("2") do |config|
     docker pull jenkins/jenkins:lts
   SHELL
 
+  config.vm.provision "setup-virtualenv", type: "shell", inline: <<-SHELL
+    su -c 'pip3 install virtualenv' vagrant
+  SHELL
+
 end
