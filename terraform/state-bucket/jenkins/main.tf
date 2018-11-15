@@ -4,7 +4,6 @@ terraform {
 
 provider "aws" {
   region  = "us-east-1"
-  profile = "ecs-workshop"
   version = "= 1.43.0"
 }
 

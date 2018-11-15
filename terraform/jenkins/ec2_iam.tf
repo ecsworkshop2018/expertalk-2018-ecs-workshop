@@ -54,5 +54,3 @@ resource "aws_iam_role_policy_attachment" "asg_notification_access" {
   role       = "${aws_iam_role.ecs_asg_notification_access_role.name}"
   depends_on = ["aws_iam_role.ecs_asg_notification_access_role"]
 }
-
-

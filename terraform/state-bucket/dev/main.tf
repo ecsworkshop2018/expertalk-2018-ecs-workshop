@@ -4,7 +4,6 @@ terraform {
 
 provider "aws" {
   region  = "us-east-1"
-  profile = "ecs-workshop"
   version = "= 1.43.0"
 }
 
@@ -28,14 +27,13 @@ resource "aws_s3_bucket" "terraform_state_storage" {
 }
 
 resource "aws_dynamodb_table" "terraform-lock-table" {
-
   "attribute" {
     name = "LockID"
     type = "S"
   }
 
-  hash_key = "LockID"
-  name = "Terraform-Lock-Table"
-  read_capacity = 5
+  hash_key       = "LockID"
+  name           = "Terraform-Lock-Table"
+  read_capacity  = 5
   write_capacity = 5
 }

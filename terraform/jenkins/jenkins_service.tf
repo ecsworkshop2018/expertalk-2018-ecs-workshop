@@ -4,12 +4,12 @@ resource "aws_ecs_service" "service" {
   task_definition                    = "${aws_ecs_task_definition.task_definition.arn}"
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
-  desired_count = 1
+  desired_count                      = 1
 
   load_balancer {
     target_group_arn = "${aws_alb_target_group.alb_jenkins_target_group.arn}"
-    container_name = "${local.service_name}"
-    container_port = "${local.jenkins_container_port}"
+    container_name   = "${local.service_name}"
+    container_port   = "${local.jenkins_container_port}"
   }
 
   lifecycle {
@@ -23,12 +23,12 @@ resource "aws_ecs_task_definition" "task_definition" {
   task_role_arn         = "${aws_iam_role.jenkins_task_role.arn}"
 
   volume {
-    name = "${local.efs_volume_name}"
+    name      = "${local.efs_volume_name}"
     host_path = "${local.efs_host_path}"
   }
 
   volume {
-    name = "${local.docker_sock_volume_name}"
+    name      = "${local.docker_sock_volume_name}"
     host_path = "/var/run/docker.sock"
   }
 
@@ -38,10 +38,10 @@ resource "aws_ecs_task_definition" "task_definition" {
 }
 
 locals {
-  service_name = "jenkins"
-  jenkins_log_group_name = "jenkins_logs"
-  jenkins_container_port = 8080
-  jenkins_context_path="/jenkins"
+  service_name            = "jenkins"
+  jenkins_log_group_name  = "jenkins_logs"
+  jenkins_container_port  = 8080
+  jenkins_context_path    = "/jenkins"
   docker_sock_volume_name = "dockerSockVolume"
 }
 
@@ -60,7 +60,6 @@ data "template_file" "container_definitions_json" {
     docker_sock_volume = "${local.docker_sock_volume_name}"
   }
 }
-
 
 resource "aws_cloudwatch_log_group" "ecs_log_group" {
   name              = "${local.jenkins_log_group_name}"
@@ -88,6 +87,6 @@ EOF
 }
 
 resource aws_iam_role_policy_attachment "jenkins_task_role_policy_attachment" {
-  role = "${aws_iam_role.jenkins_task_role.name}"
+  role       = "${aws_iam_role.jenkins_task_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
 }

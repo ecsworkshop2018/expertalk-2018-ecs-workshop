@@ -2,11 +2,10 @@ terraform {
   required_version = "= 0.11.10"
 
   backend "s3" {
-    bucket  = "ecs-workshop-terraform-state-dev"
-    key     = "dev-vpc-subnets-and-network.tfstate"
-    region  = "us-east-1"
-    profile = "ecs-workshop"
-    encrypt = true
+    bucket         = "ecs-workshop-terraform-state-dev"
+    key            = "dev-vpc-subnets-and-network.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
     dynamodb_table = "Terraform-Lock-Table"
   }
 }
@@ -18,7 +17,6 @@ locals {
 
 provider "aws" {
   region  = "${local.region}"
-  profile = "ecs-workshop"
   version = "= 1.43.0"
 }
 

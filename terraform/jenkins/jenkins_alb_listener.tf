@@ -1,4 +1,3 @@
-
 resource "aws_alb_target_group" "alb_jenkins_target_group" {
   name                 = "${local.service_name}-tg"
   port                 = "8080"
