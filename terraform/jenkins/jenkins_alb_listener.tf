@@ -17,7 +17,7 @@ resource "aws_alb_target_group" "alb_jenkins_target_group" {
 }
 
 resource "aws_alb_listener_rule" "service_listner_rule" {
-  listener_arn = "${module.alb.alb_http_listener_arn}"
+  listener_arn = "${module.alb.alb_https_listener_arn}"
 
   action {
     type             = "forward"
@@ -31,7 +31,7 @@ resource "aws_alb_listener_rule" "service_listner_rule" {
 }
 
 resource "aws_alb_listener_rule" "service_listner_rule_star" {
-  listener_arn = "${module.alb.alb_http_listener_arn}"
+  listener_arn = "${module.alb.alb_https_listener_arn}"
 
   action {
     type             = "forward"

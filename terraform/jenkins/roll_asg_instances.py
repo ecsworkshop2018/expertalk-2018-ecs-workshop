@@ -12,16 +12,25 @@ logger = logging.getLogger()
 logger.setLevel(logging.DEBUG)
 
 
-def roll_instances(asg_name):
-    logger.debug("starting instance rolling for asg: %s", asg_name)
-    asg_info = client.describe_auto_scaling_groups(AutoScalingGroupNames=[asg_name])["AutoScalingGroups"][0]
-    asg = ASG(asg_name, instance_ids(asg_info), asg_info["DesiredCapacity"], asg_info["MaxSize"])
+def describe_asg(asg_name):
+    return client.describe_auto_scaling_groups(AutoScalingGroupNames=[asg_name])
+
+
+def roll_instances(asg_name, describe_asg_fn=describe_asg):
+    asg = get_asg(asg_name, describe_asg_fn)
     asg.roll_instances()
     return
 
 
+def get_asg(asg_name, describe_asg_fn):
+    logger.debug("starting instance rolling for asg: %s", asg_name)
+    asg_info = describe_asg_fn(asg_name)["AutoScalingGroups"][0]
+    asg = ASG(asg_name, instance_ids(asg_info), asg_info["DesiredCapacity"], asg_info["MaxSize"])
+    return asg
+
+
 def instance_ids(asg_info):
-    return map(lambda instance_info: instance_info["InstanceId"], asg_info["Instances"])
+    return list(map(lambda instance_info: instance_info["InstanceId"], asg_info["Instances"]))
 
 
 def suspend_processes(asg_name):

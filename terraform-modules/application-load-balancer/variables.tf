@@ -5,7 +5,6 @@ variable "name" {}
 variable "environment" {}
 
 variable "certificate_arn" {
-  default = ""
 }
 
 variable "alb_access_cidr_blocks" {

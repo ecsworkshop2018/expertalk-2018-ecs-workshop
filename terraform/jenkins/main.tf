@@ -41,6 +41,7 @@ module "alb" {
   alb_access_ipv6_cidr_blocks = ["::/0"]
   environment                 = "jenkins"
   public_subnet_ids           = ["${data.aws_subnet_ids.dev_vpc_public_subnet_ids.ids}"]
+  certificate_arn             = "${aws_acm_certificate.jenkins_certificate.arn}"
 }
 
 resource "aws_ecs_cluster" "jenkins_cluster" {
@@ -125,6 +126,18 @@ resource aws_autoscaling_group "jenkins_asg" {
     key                 = "Description"
     value               = "EC2 ASG for jenkins ECS cluster"
     propagate_at_launch = true
+  }
+}
+
+resource "null_resource" "rotate-asg-instances" {
+  triggers {
+    launch_configuration = "${aws_launch_configuration.jenkins_lc.id}"
+  }
+
+  depends_on = ["aws_autoscaling_group.jenkins_asg"]
+
+  provisioner "local-exec" {
+    command = "python3 ${path.module}/roll_asg_instances.py ${aws_autoscaling_group.jenkins_asg.name}"
   }
 }
 

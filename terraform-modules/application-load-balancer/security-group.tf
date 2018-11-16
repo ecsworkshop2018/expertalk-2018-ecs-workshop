@@ -9,17 +9,7 @@ resource "aws_security_group" "alb" {
   }
 }
 
-resource "aws_security_group_rule" "direct_accesss_to_http" {
-  security_group_id = "${aws_security_group.alb.id}"
-  type              = "ingress"
-  from_port         = 80
-  to_port           = 80
-  protocol          = "tcp"
-  cidr_blocks       = ["${var.alb_access_cidr_blocks}"]
-  ipv6_cidr_blocks  = ["${var.alb_access_ipv6_cidr_blocks}"]
-}
-
-resource "aws_security_group_rule" "direct_accesss_to_https" {
+resource "aws_security_group_rule" "direct_access_to_https" {
   security_group_id = "${aws_security_group.alb.id}"
   type              = "ingress"
   from_port         = 443
@@ -27,7 +17,6 @@ resource "aws_security_group_rule" "direct_accesss_to_https" {
   protocol          = "tcp"
   cidr_blocks       = ["${var.alb_access_cidr_blocks}"]
   ipv6_cidr_blocks  = ["${var.alb_access_ipv6_cidr_blocks}"]
-  count             = "${var.certificate_arn == "" ? 0 : 1}"
 }
 
 resource "aws_security_group_rule" "alb_egress_to_any" {

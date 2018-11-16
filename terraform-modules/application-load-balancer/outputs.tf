@@ -6,6 +6,14 @@ output "alb_arn" {
   value = "${aws_alb.alb.arn}"
 }
 
-output "alb_http_listener_arn" {
-  value = "${aws_alb_listener.alb_http_listener.arn}"
+output "alb_https_listener_arn" {
+  value = "${aws_alb_listener.alb_https_listener.arn}"
+}
+
+output "alb_dns_name" {
+  value = "${aws_alb.alb.dns_name}"
+}
+
+output "alb_zone_id" {
+  value = "${aws_alb.alb.zone_id}"
 }

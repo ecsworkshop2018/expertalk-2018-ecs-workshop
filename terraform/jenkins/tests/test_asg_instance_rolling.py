@@ -2,9 +2,23 @@ import pytest
 
 from roll_asg_instances import ASG
 import roll_asg_instances
+from roll_asg_instances import get_asg
+from roll_asg_instances import instance_ids
 
 roll_asg_instances.IN_SERVICE_TIMEOUT = 2
 roll_asg_instances.IN_SERVICE_INTERVAL = 1
+
+
+def test_get_asg():
+    asg = get_asg("my-auto-scaling-group", stub_describe_asg)
+    assert asg.name == "my-auto-scaling-group"
+    assert asg.instances == ["i-4ba0837f", "i-4ba0837e"]
+    assert asg.desired == 1
+    assert asg.max == 2
+
+
+def test_should_extract_instance_ids():
+    assert instance_ids(stub_asg_info()) == ["i-4ba0837f", "i-4ba0837e"]
 
 
 def test_should_not_suspend_scaling_processes_for_zero_instance_asg():
@@ -134,3 +148,99 @@ def timeout_in_service_instances(asg_name):
 
 def dummy_terminate_instance(instance_id, decrease_desired_capacity):
     return
+
+def stub_asg_info():
+    return {
+            'AutoScalingGroupARN': 'arn:aws:autoscaling:us-west-2:123456789012:autoScalingGroup:930d940e-891e-4781-a11a-7b0acd480f03:autoScalingGroupName/my-auto-scaling-group',
+            'AutoScalingGroupName': 'my-auto-scaling-group',
+            'AvailabilityZones': [
+                'us-west-2c',
+            ],
+            'CreatedTime': "",
+            'DefaultCooldown': 300,
+            'DesiredCapacity': 1,
+            'EnabledMetrics': [
+            ],
+            'HealthCheckGracePeriod': 300,
+            'HealthCheckType': 'EC2',
+            'Instances': [
+                {
+                    'AvailabilityZone': 'us-west-2c',
+                    'HealthStatus': 'Healthy',
+                    'InstanceId': 'i-4ba0837f',
+                    'LaunchConfigurationName': 'my-launch-config',
+                    'LifecycleState': 'InService',
+                },
+                {
+                    'AvailabilityZone': 'us-west-2c',
+                    'HealthStatus': 'Healthy',
+                    'InstanceId': 'i-4ba0837e',
+                    'LaunchConfigurationName': 'my-launch-config',
+                    'LifecycleState': 'InService',
+                }
+            ],
+            'LaunchConfigurationName': 'my-launch-config',
+            'LoadBalancerNames': [
+            ],
+            'MaxSize': 2,
+            'MinSize': 0,
+            'NewInstancesProtectedFromScaleIn': False,
+            'SuspendedProcesses': [
+            ],
+            'Tags': [
+            ],
+            'TerminationPolicies': [
+                'Default',
+            ],
+            'VPCZoneIdentifier': 'subnet-12345678',
+        }
+
+def stub_describe_asg(asg_name):
+    return {
+    'AutoScalingGroups': [
+        {
+            'AutoScalingGroupARN': 'arn:aws:autoscaling:us-west-2:123456789012:autoScalingGroup:930d940e-891e-4781-a11a-7b0acd480f03:autoScalingGroupName/my-auto-scaling-group',
+            'AutoScalingGroupName': 'my-auto-scaling-group',
+            'AvailabilityZones': [
+                'us-west-2c',
+            ],
+            'CreatedTime': "",
+            'DefaultCooldown': 300,
+            'DesiredCapacity': 1,
+            'EnabledMetrics': [
+            ],
+            'HealthCheckGracePeriod': 300,
+            'HealthCheckType': 'EC2',
+            'Instances': [
+                {
+                    'AvailabilityZone': 'us-west-2c',
+                    'HealthStatus': 'Healthy',
+                    'InstanceId': 'i-4ba0837f',
+                    'LaunchConfigurationName': 'my-launch-config',
+                    'LifecycleState': 'InService',
+                },
+                {
+                    'AvailabilityZone': 'us-west-2c',
+                    'HealthStatus': 'Healthy',
+                    'InstanceId': 'i-4ba0837e',
+                    'LaunchConfigurationName': 'my-launch-config',
+                    'LifecycleState': 'InService',
+                }
+            ],
+            'LaunchConfigurationName': 'my-launch-config',
+            'LoadBalancerNames': [
+            ],
+            'MaxSize': 2,
+            'MinSize': 0,
+            'NewInstancesProtectedFromScaleIn': False,
+            'SuspendedProcesses': [
+            ],
+            'Tags': [
+            ],
+            'TerminationPolicies': [
+                'Default',
+            ],
+            'VPCZoneIdentifier': 'subnet-12345678',
+        },
+    ]
+}
