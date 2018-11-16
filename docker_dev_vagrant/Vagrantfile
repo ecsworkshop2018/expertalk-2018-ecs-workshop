@@ -66,28 +66,16 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
 
-  config.vm.provision "install-aws-cli", type: "shell", inline: <<-SHELL
+  config.vm.provision "apt-update", type: "shell", inline: <<-SHELL
     apt-get update
+  SHELL
 
-    # add python as alias for python3
-    su -c 'echo "alias python=python3" >> /home/vagrant/.profile' vagrant
-
-    # install pip
+  config.vm.provision "install-pip3", type: "shell", inline: <<-SHELL
     apt-get install -y python3-pip
-
-    # install aws
-    su -c 'pip3 install awscli --upgrade --user' vagrant
   SHELL
 
   config.vm.provision "install-jq", type: "shell", inline: <<-SHELL
     apt-get install -y jq
-  SHELL
-
-  config.vm.provision "install-terraform", type: "shell", inline: <<-SHELL
-    apt-get install -y unzip
-    cd /tmp
-    wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
-    unzip -d /usr/local/bin terraform_0.11.10_linux_amd64.zip
   SHELL
 
   config.vm.provision "install-docker", type: "shell", inline: <<-SHELL
@@ -99,26 +87,12 @@ Vagrant.configure("2") do |config|
     usermod -aG docker vagrant
   SHELL
 
-  config.vm.provision "copy-credentials", type: "file", source: "~/accessKeys.csv", destination: "accessKeys.csv"
-
-  config.vm.provision "set-credentials", type: "shell", inline: <<-SHELL
-    apt-get install -y csvtool
-
-    ACCESS_KEY="$(csvtool sub 2 1 1 1 accessKeys.csv)"
-    SECRET_KEY="$(csvtool sub 2 2 1 1 accessKeys.csv)"
-
-    su - vagrant -c "aws configure set aws_access_key_id ${ACCESS_KEY}"
-    su - vagrant -c "aws configure set aws_secret_access_key ${SECRET_KEY}"
-    su - vagrant -c "aws configure set default.region us-east-1"
-    su - vagrant -c "aws configure set default.output json"
-  SHELL
-
   config.vm.provision "pull-jenkins-image", type: "shell", inline: <<-SHELL
     docker pull jenkins/jenkins:lts
   SHELL
 
-  config.vm.provision "setup-virtualenv", type: "shell", privileged: false, inline: <<-SHELL
-    pip3 install virtualenv
+  config.vm.provision "install-csvtool", type: "shell", inline: <<-SHELL
+    apt-get install -y csvtool
   SHELL
 
   config.vm.provision "install-zsh", type: "shell", inline: <<-SHELL
@@ -131,5 +105,36 @@ Vagrant.configure("2") do |config|
     git clone https://github.com/robbyrussell/oh-my-zsh.git ~/.oh-my-zsh
     cp ~/.oh-my-zsh/templates/zshrc.zsh-template ~/.zshrc
     echo 'PROMPT="%{$fg[red]%}%n%{$reset_color%} ${PROMPT}"' >> ~/.zshrc
+    echo 'export PATH=${HOME}/.local/bin:${HOME}/bin:${PATH}' >> ~/.zshrc
+    echo 'export LC_ALL="en_US.UTF-8"' >> ~/.zshrc
+    echo 'export LC_CTYPE="en_US.UTF-8"' >> ~/.zshrc
+  SHELL
+
+  config.vm.provision "install-terraform", type: "shell", inline: <<-SHELL
+    apt-get install -y unzip
+    cd /tmp
+    wget https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
+    unzip -d /usr/local/bin terraform_0.11.10_linux_amd64.zip
+  SHELL
+
+  config.vm.provision "install-aws-cli", type: "shell", privileged: false, inline: <<-SHELL
+    echo "alias python=python3" >> ~/.zshrc
+    pip3 install awscli --upgrade --user
+  SHELL
+
+  config.vm.provision "setup-virtualenv", type: "shell", privileged: false, inline: <<-SHELL
+    pip3 install virtualenv
+  SHELL
+
+  config.vm.provision "copy-credentials", type: "file", source: "~/accessKeys.csv", destination: "/tmp/accessKeys.csv"
+
+  config.vm.provision "set-credentials", type: "shell", privileged: false, inline: <<-SHELL
+    ACCESS_KEY="$(csvtool sub 2 1 1 1 /tmp/accessKeys.csv)"
+    SECRET_KEY="$(csvtool sub 2 2 1 1 /tmp/accessKeys.csv)"
+
+    aws configure set aws_access_key_id ${ACCESS_KEY}
+    aws configure set aws_secret_access_key ${SECRET_KEY}
+    aws configure set default.region us-east-1
+    aws configure set default.output json
   SHELL
 end
