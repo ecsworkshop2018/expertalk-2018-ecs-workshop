@@ -69,24 +69,25 @@ class ASG:
         return
 
     def roll_instances(self, suspend_processes=suspend_processes, update_asg_desired_max=update_asg_desired_max, in_service_instances=in_service_instances, resume_processes=resume_processes, terminate_instance=terminate_instance):
-        suspend_processes(self.name)
-        update_asg_desired_max(self.name, self.desired*2, max(self.max, self.desired*2))
+        if len(self.instances) > 0:
+            try:
+                suspend_processes(self.name)
+                update_asg_desired_max(self.name, self.desired*2, max(self.max, self.desired*2))
 
-        x = IN_SERVICE_TIMEOUT
-        while (x > 0) and (in_service_instances(self.name) < self.desired*2):
-            x -= IN_SERVICE_INTERVAL
-            time.sleep(IN_SERVICE_INTERVAL)
+                x = IN_SERVICE_TIMEOUT
+                while (x > 0) and (in_service_instances(self.name) < self.desired*2):
+                    x -= IN_SERVICE_INTERVAL
+                    time.sleep(IN_SERVICE_INTERVAL)
 
-        if in_service_instances(self.name) < self.desired*2:
-            resume_processes(self.name)
-            logger.error("TimeoutError: Enough instances did not become InService")
-            raise ValueError("TimeoutError: Enough instances did not become InService")
+                if in_service_instances(self.name) < self.desired*2:
+                    logger.error("TimeoutError: Enough instances did not become InService")
+                    raise ValueError("TimeoutError: Enough instances did not become InService")
 
-        for i in self.instances:
-            terminate_instance(i, True)
-
-        update_asg_desired_max(self.name, self.desired, self.max)
-        resume_processes(self.name)
+                for i in self.instances:
+                    terminate_instance(i, True)
+            finally:
+                update_asg_desired_max(self.name, self.desired, self.max)
+                resume_processes(self.name)
         return
 
 
