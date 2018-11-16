@@ -29,5 +29,5 @@ RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
 
 RUN apt-get update;\
-    apt-get install -y docker-ce; \
+    apt-get install -y docker-ce="18.06.1~ce~3-0~debian"; \
     usermod -aG docker jenkins
