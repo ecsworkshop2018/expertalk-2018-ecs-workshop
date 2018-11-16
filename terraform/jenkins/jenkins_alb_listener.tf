@@ -12,7 +12,7 @@ resource "aws_alb_target_group" "alb_jenkins_target_group" {
     interval            = "10"
     timeout             = "5"
     healthy_threshold   = "3"
-    unhealthy_threshold = "2"
+    unhealthy_threshold = "10"
   }
 }
 

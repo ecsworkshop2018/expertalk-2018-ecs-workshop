@@ -15,6 +15,10 @@ provider "aws" {
   version = "= 1.43.0"
 }
 
+provider "template" {
+  version = "= 1.0"
+}
+
 data "aws_vpc" "dev_vpc" {
   tags {
     Name = "dev-ecs-workshop"
