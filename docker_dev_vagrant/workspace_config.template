@@ -1,4 +1,4 @@
 FIRST_NAME="<your first name>"
-GIT_USER_NAME="<your git display name>"
-GIT_USER_EMAIL="<git email>"
+JENKINS_USER_NAME="<your jenkins user name>"
+JENKINS_PASSWORD="<your jenkins password>"
 GITHUB_ACCESS_TOKEN="<your github personal access token>"
