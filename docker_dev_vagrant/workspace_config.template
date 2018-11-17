@@ -1,0 +1,4 @@
+FIRST_NAME="<your first name>"
+GIT_USER_NAME="<your git display name>"
+GIT_USER_EMAIL="<git email>"
+GITHUB_ACCESS_TOKEN="<your github personal access token>"
