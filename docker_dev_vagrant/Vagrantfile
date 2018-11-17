@@ -140,4 +140,7 @@ Vagrant.configure("2") do |config|
 
   # NOTE: If your id_rsa is not setup on github, then update to a key which is configured on Github.
   config.vm.provision "copy-git-ssh-key", type: "file", source: "~/.ssh/id_rsa", destination: "~/.ssh/id_rsa"
+
+  # NOTE: Please copy workspace_config.template to your user home and substitute the required values.
+  config.vm.provision "copy-workshop-config", type: "file", source: "~/workspace_config", destination: "~/workspace_config"
 end
