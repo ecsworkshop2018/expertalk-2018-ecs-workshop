@@ -14,6 +14,24 @@ COPY configure-root-url.groovy /usr/share/jenkins/ref/init.groovy.d/configure-ro
 
 COPY enable-csrf-protection.groovy /usr/share/jenkins/ref/init.groovy.d/enable-csrf-protection.groovy
 
+ARG ROOT_URL
+
+RUN if [ -z "$ROOT_URL" ]; then echo "ERROR: ROOT_URL not set"; exit 1; fi
+
+ARG USER_NAME
+
+RUN if [ -z "$USER_NAME" ]; then echo "ERROR: USER_NAME not set"; exit 1; fi
+
+ARG USER_PASS
+
+RUN if [ -z "$USER_PASS" ]; then echo "ERROR: USER_PASS not set"; exit 1; fi
+
+RUN sed -i "s|ROOT_URL|${ROOT_URL}|g" /usr/share/jenkins/ref/init.groovy.d/configure-root-url.groovy
+
+RUN sed -i "s/USER_NAME/${USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
+
+RUN sed -i "s/USER_PASS/${USER_PASS}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
+
 USER root
 
 RUN apt-get update; \
