@@ -146,6 +146,3 @@ docs/_build/
 
 # PyBuilder
 target/
-
-*workspace_config.template
-
