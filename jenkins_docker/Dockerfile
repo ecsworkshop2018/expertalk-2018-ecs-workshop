@@ -1,5 +1,25 @@
 FROM jenkins/jenkins:lts
 
+USER root
+
+RUN apt-get update; \
+    apt-get install -y apt-transport-https \
+                       ca-certificates \
+                       curl \
+                       gnupg2 \
+                       software-properties-common \
+                       lsb-release
+
+RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
+
+RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
+
+RUN apt-get update;\
+    apt-get install -y docker-ce="18.06.1~ce~3-0~debian"; \
+    usermod -aG docker jenkins
+
+USER jenkins
+
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
@@ -32,24 +52,3 @@ RUN sed -i "s/USER_PASS/${USER_PASS}/g" /usr/share/jenkins/ref/init.groovy.d/con
 
 RUN sed -i "s/FIRST_NAME/${FIRST_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-git-global-config.groovy
 
-USER root
-
-RUN apt-get update; \
-    apt-get install -y apt-transport-https \
-                       ca-certificates \
-                       curl \
-                       gnupg2 \
-                       software-properties-common \
-                       lsb-release
-
-RUN curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
-
-RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable"
-
-RUN apt-get update;\
-    apt-get install -y docker-ce="18.06.1~ce~3-0~debian"; \
-    usermod -aG docker jenkins
-
-USER jenkins
-
-RUN git config --global user.name jenkins; cat ~/.gitconfig;
