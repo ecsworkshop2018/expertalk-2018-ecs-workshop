@@ -19,6 +19,10 @@ provider "template" {
   version = "= 1.0"
 }
 
+provider "null" {
+  version = "= 1.0"
+}
+
 data "aws_vpc" "dev_vpc" {
   tags {
     Name = "dev-ecs-workshop"
@@ -126,6 +130,10 @@ resource aws_autoscaling_group "jenkins_asg" {
     key                 = "Description"
     value               = "EC2 ASG for jenkins ECS cluster"
     propagate_at_launch = true
+  }
+
+  timeouts {
+    delete = "20m"
   }
 }
 

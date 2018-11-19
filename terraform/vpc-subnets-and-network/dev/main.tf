@@ -26,6 +26,6 @@ module "vpc" {
   environment          = "${local.environment}"
   vpc_cidr             = "172.29.0.0/20"
   public_subnet_cidrs  = ["172.29.0.0/22", "172.29.4.0/22"]
-  private_subnet_cidrs = ["172.29.8.0/22", "172.29.12.0/22"]
+  private_subnet_cidrs = []
   region               = "${local.region}"
 }

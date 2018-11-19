@@ -1,5 +1,9 @@
 data aws_availability_zones all {}
 
+locals {
+  private_subnets_required = "${length(var.private_subnet_cidrs) > 0 ? true : false}"
+}
+
 resource "aws_subnet" "public_subnet" {
   vpc_id                  = "${aws_vpc.vpc.id}"
   cidr_block              = "${element(var.public_subnet_cidrs, count.index)}"
