@@ -18,6 +18,12 @@ docker build \
 
 ### Running the container locally
 
+Stop and remove container if created previously
+
+```bash
+docker rm -f jenkins
+```
+
 ```bash
 docker run -p 8080:8080 --name jenkins \
     -v /var/run/docker.sock:/var/run/docker.sock \
