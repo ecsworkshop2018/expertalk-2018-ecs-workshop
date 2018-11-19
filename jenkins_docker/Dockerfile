@@ -17,6 +17,9 @@ RUN add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/debia
 RUN apt-get update;\
     apt-get install -y docker-ce="18.06.1~ce~3-0~debian"
 
+# install maven
+RUN apt-get install -y maven
+
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
