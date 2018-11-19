@@ -14,6 +14,6 @@ resource "aws_cloudformation_stack" "application-dns" {
     LoadBalancerDNSName      = "dualstack.${var.lb_dns_name}"
     Environment              = "${var.env}"
     AppName                  = "${var.app_name}"
-    weight                   = "${var.weight}"
+    Weight                   = "${var.weight}"
   }
 }

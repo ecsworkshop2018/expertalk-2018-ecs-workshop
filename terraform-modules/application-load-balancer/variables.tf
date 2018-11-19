@@ -4,8 +4,7 @@ variable "name" {}
 
 variable "environment" {}
 
-variable "certificate_arn" {
-}
+variable "certificate_arn" {}
 
 variable "alb_access_cidr_blocks" {
   type = "list"

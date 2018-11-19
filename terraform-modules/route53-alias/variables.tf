@@ -1,6 +1,6 @@
 variable "weight" {}
 
-variable hosted_zone {}
+variable "hosted_zone" {}
 
 variable "env" {}
 

@@ -1,0 +1,35 @@
+Description: >
+  Create a generic type DNS record
+
+Parameters:
+  HostedZoneId:
+    Description: Hosted zone Id for parent domain
+    Type: String
+  DNSName:
+    Description: DNS name
+    Type: String
+  ResourceRecord:
+    Description: Resource record
+    Type: String
+  Type:
+    Description: RecordSet type
+    Type: String
+
+Resources:
+  RecordSet:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      Comment: DNS record
+      HostedZoneId: !Ref HostedZoneId
+      Name: !Ref DNSName
+      ResourceRecords:
+        - !Ref ResourceRecord
+      TTL: '60'
+      Type: !Ref Type
+
+Outputs:
+  FQDN:
+    Description: The RecordSet FQDN
+    Value: !Ref RecordSet
+
+

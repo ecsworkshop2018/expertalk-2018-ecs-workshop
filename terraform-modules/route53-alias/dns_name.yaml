@@ -19,7 +19,7 @@ Parameters:
   AppName:
     Type: String
     Description: Application name which will be used to the DNS record identifier for weight routing policy.
-  weight:
+  Weight:
     Type: Number
     Description: Weight to be used for the DNS record.
   Environment:
@@ -30,7 +30,7 @@ Parameters:
       - prod
 
 Resources:
-  contributorContainerServiceRecordSetGroup:
+  RecordSetGroup:
     Type: AWS::Route53::RecordSetGroup
     Properties:
       Comment: DNS record that is an ALIAS to the load balancer for container service
