@@ -20,6 +20,24 @@ RUN apt-get update;\
 # install maven
 RUN apt-get install -y maven
 
+# Install pip
+RUN apt-get install -y python3-pip
+
+# install aws cli
+RUN pip3 install awscli
+
+# install aws cli
+RUN pip3 install virtualenv
+
+# Install JQ and YQ
+RUN apt-get install -y jq
+RUN pip3 install yq
+
+# install terraform
+RUN cd /tmp; \
+    wget --show-progress https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip; \
+    unzip -d /usr/local/bin terraform_0.11.10_linux_amd64.zip
+
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
