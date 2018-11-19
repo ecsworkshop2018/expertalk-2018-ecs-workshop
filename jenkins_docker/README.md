@@ -14,7 +14,7 @@ docker build \
     --build-arg "USER_NAME=${JENKINS_USER_NAME}" \
     --build-arg "USER_PASS=${JENKINS_PASSWORD}" \
     --build-arg "FIRST_NAME=${FIRST_NAME}" \
-    -t ${ECR_REPOSITORY_PATH}:${JENKINS_TAG} .
+    -t ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG} .
 
 docker push ${ECR_REPOSITORY_PATH}:${JENKINS_TAG}
 ```
