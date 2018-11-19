@@ -5,7 +5,6 @@ $(aws ecr get-login --no-include-email --region us-east-1)
 
 ### Build docker image
 ```bash
-
 JENKINS_TAG="${FIRST_NAME}-$(date +%s)"
 
 docker build \
@@ -13,6 +12,7 @@ docker build \
     --build-arg "USER_NAME=${JENKINS_USER_NAME}" \
     --build-arg "USER_PASS=${JENKINS_PASSWORD}" \
     --build-arg "FIRST_NAME=${FIRST_NAME}" \
+    --build-arg "GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}" \
     -t ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG} .
 ```
 
