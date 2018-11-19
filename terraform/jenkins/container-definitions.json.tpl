@@ -26,12 +26,6 @@
         "awslogs-region": "${region}",
         "awslogs-stream-prefix": "${service_name}"
       }
-    },
-    "environment": [
-      {
-        "name": "JENKINS_OPTS",
-        "value": "--prefix=/jenkins"
-      }
-    ]
+    }
   }
 ]

@@ -29,10 +29,20 @@ docker run -p 8080:8080 --name jenkins \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -d ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG}
 ```
-Jenkins is not running at: http://localhost:8080
+Jenkins is now running at: http://localhost:8080
 
 ### Push Jenkins image to ECR (build the image first).
 
 ```bash
 docker push ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG}
+```
+
+### Update Jenkins image as terraform variable.
+
+```bash
+PREVIOUS_JENKINS_IMAGE_CONFIG=$(cat ../terraform/jenkins/terraform.tfvars | grep jenkins_docker_image)
+
+NEW_JENKINS_IMAGE_CONFIG="jenkins_docker_image=\"${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG}\""
+
+sed -i "s|${PREVIOUS_JENKINS_IMAGE_CONFIG}|${NEW_JENKINS_IMAGE_CONFIG}|g" ../terraform/jenkins/terraform.tfvars
 ```

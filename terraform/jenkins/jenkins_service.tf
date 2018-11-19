@@ -5,9 +5,11 @@ resource "aws_ecs_service" "service" {
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
   desired_count                      = 1
+  health_check_grace_period_seconds  = 60
 
   load_balancer {
-    target_group_arn = "${aws_alb_target_group.alb_jenkins_target_group.arn}"
+    //target_group_arn = "${aws_alb_target_group.alb_jenkins_target_group.arn}"
+    target_group_arn = "${module.alb.alb_https_listener_default_tg_arn}"
     container_name   = "${local.service_name}"
     container_port   = "${local.jenkins_container_port}"
   }
@@ -41,16 +43,17 @@ locals {
   service_name            = "jenkins"
   jenkins_log_group_name  = "jenkins_logs"
   jenkins_container_port  = 8080
-  jenkins_context_path    = "/jenkins"
   docker_sock_volume_name = "dockerSockVolume"
 }
+
+variable "jenkins_docker_image" {}
 
 data "template_file" "container_definitions_json" {
   template = "${file("./container-definitions.json.tpl")}"
 
   vars {
     service_name       = "${local.service_name}"
-    docker_image       = "738035286324.dkr.ecr.us-east-1.amazonaws.com/ecs-workshop/jenkins:latest"
+    docker_image       = "${var.jenkins_docker_image}"
     container_port     = "${local.jenkins_container_port}"
     log_group          = "${local.jenkins_log_group_name}"
     memory_reservation = 1536

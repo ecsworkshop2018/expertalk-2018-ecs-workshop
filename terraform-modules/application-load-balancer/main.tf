@@ -23,6 +23,16 @@ resource "aws_alb_target_group" "alb_https_tg" {
     Name        = "${var.name}-https-tg"
     Environment = "${var.environment}"
   }
+
+  health_check {
+    protocol            = "HTTP"
+    path                = "${var.health_check_path}"
+    matcher             = "${var.health_check_allowed_codes}"
+    interval            = "10"
+    timeout             = "5"
+    healthy_threshold   = "3"
+    unhealthy_threshold = "10"
+  }
 }
 
 resource "aws_alb_listener" "alb_https_listener" {

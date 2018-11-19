@@ -40,7 +40,7 @@ Resources:
           Name: !Ref DNSName
           Type: A
           SetIdentifier: !Sub "${Environment}-${AppName}"
-          Weight: !Ref weight
+          Weight: !Ref Weight
           AliasTarget:
             HostedZoneId: !Ref LoadBalancerHostedZoneId
             DNSName: !Ref LoadBalancerDNSName

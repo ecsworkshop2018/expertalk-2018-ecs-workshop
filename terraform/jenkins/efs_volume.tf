@@ -48,17 +48,9 @@ resource "aws_security_group_rule" "efs_client_sg_allow_all_egress_access" {
   cidr_blocks       = ["0.0.0.0/0"]
 }
 
-data "aws_subnet_ids" "dev_vpc_private_subnet_ids" {
-  vpc_id = "${data.aws_vpc.dev_vpc.id}"
-
-  tags {
-    Type = "private"
-  }
-}
-
 resource "aws_efs_mount_target" "efs_mount_target" {
-  count           = "${length(data.aws_subnet_ids.dev_vpc_private_subnet_ids.ids)}"
+  count           = "${length(data.aws_subnet_ids.dev_vpc_public_subnet_ids.ids)}"
   file_system_id  = "${aws_efs_file_system.efs_jenkins_file_system.id}"
-  subnet_id       = "${element(data.aws_subnet_ids.dev_vpc_private_subnet_ids.ids, count.index)}"
+  subnet_id       = "${element(data.aws_subnet_ids.dev_vpc_public_subnet_ids.ids, count.index)}"
   security_groups = ["${aws_security_group.efs_sg.id}"]
 }

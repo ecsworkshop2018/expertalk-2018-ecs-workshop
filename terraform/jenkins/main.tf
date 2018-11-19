@@ -45,7 +45,9 @@ module "alb" {
   alb_access_ipv6_cidr_blocks = ["::/0"]
   environment                 = "jenkins"
   public_subnet_ids           = ["${data.aws_subnet_ids.dev_vpc_public_subnet_ids.ids}"]
-  certificate_arn             = "${aws_acm_certificate.jenkins_certificate.arn}"
+  certificate_arn             = "${data.aws_acm_certificate.jenkins_certificate.arn}"
+  health_check_allowed_codes  = "200,302"
+  health_check_path           = "/"
 }
 
 resource "aws_ecs_cluster" "jenkins_cluster" {

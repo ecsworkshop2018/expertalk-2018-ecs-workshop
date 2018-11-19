@@ -10,6 +10,10 @@ output "alb_https_listener_arn" {
   value = "${aws_alb_listener.alb_https_listener.arn}"
 }
 
+output "alb_https_listener_default_tg_arn" {
+  value = "${aws_alb_target_group.alb_https_tg.arn}"
+}
+
 output "alb_dns_name" {
   value = "${aws_alb.alb.dns_name}"
 }

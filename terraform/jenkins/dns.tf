@@ -13,7 +13,8 @@ module "dns" {
   app_name            = "jenkins"
 }
 
-resource "aws_acm_certificate" "jenkins_certificate" {
-  domain_name       = "jenkins.ecsworkshop2018.online"
-  validation_method = "DNS"
+data "aws_acm_certificate" "jenkins_certificate" {
+  domain      = "*.ecsworkshop2018.online"
+  statuses    = ["ISSUED"]
+  most_recent = true
 }
