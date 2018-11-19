@@ -32,23 +32,35 @@ ARG ROOT_URL
 
 RUN if [ -z "$ROOT_URL" ]; then echo "ERROR: ROOT_URL not set"; exit 1; fi
 
-ARG USER_NAME
+ARG JENKINS_USER_NAME
 
-RUN if [ -z "$USER_NAME" ]; then echo "ERROR: USER_NAME not set"; exit 1; fi
+RUN if [ -z "$JENKINS_USER_NAME" ]; then echo "ERROR: JENKINS_USER_NAME not set"; exit 1; fi
 
-ARG USER_PASS
+ARG JENKINS_PASSWORD
 
-RUN if [ -z "$USER_PASS" ]; then echo "ERROR: USER_PASS not set"; exit 1; fi
+RUN if [ -z "$JENKINS_PASSWORD" ]; then echo "ERROR: JENKINS_PASSWORD not set"; exit 1; fi
 
 ARG FIRST_NAME
 
 RUN if [ -z "$FIRST_NAME" ]; then echo "ERROR: FIRST_NAME not set"; exit 1; fi
 
+ARG GITHUB_USER_NAME
+
+RUN if [ -z "$GITHUB_USER_NAME" ]; then echo "ERROR: GITHUB_USER_NAME not set"; exit 1; fi
+
+ARG GITHUB_ACCESS_TOKEN
+
+RUN if [ -z "$GITHUB_ACCESS_TOKEN" ]; then echo "ERROR: GITHUB_ACCESS_TOKEN not set"; exit 1; fi
+
 RUN sed -i "s|ROOT_URL|${ROOT_URL}|g" /usr/share/jenkins/ref/init.groovy.d/configure-root-url.groovy
 
-RUN sed -i "s/USER_NAME/${USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
+RUN sed -i "s/JENKINS_USER_NAME/${JENKINS_USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
 
-RUN sed -i "s/USER_PASS/${USER_PASS}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
+RUN sed -i "s/JENKINS_PASSWORD/${JENKINS_PASSWORD}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
 
 RUN sed -i "s/FIRST_NAME/${FIRST_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-git-global-config.groovy
+
+RUN sed -i "s/GITHUB_USER_NAME/${GITHUB_USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-github-credentials.groovy
+
+RUN sed -i "s/GITHUB_ACCESS_TOKEN/${GITHUB_ACCESS_TOKEN}/g" /usr/share/jenkins/ref/init.groovy.d/configure-github-credentials.groovy
 

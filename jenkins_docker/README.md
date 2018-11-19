@@ -9,9 +9,10 @@ JENKINS_TAG="${FIRST_NAME}-$(date +%s)"
 
 docker build \
     --build-arg "ROOT_URL=http://${FIRST_NAME}.ecsworkshop2018.online/jenkins" \
-    --build-arg "USER_NAME=${JENKINS_USER_NAME}" \
-    --build-arg "USER_PASS=${JENKINS_PASSWORD}" \
+    --build-arg "JENKINS_USER_NAME=${JENKINS_USER_NAME}" \
+    --build-arg "JENKINS_PASSWORD=${JENKINS_PASSWORD}" \
     --build-arg "FIRST_NAME=${FIRST_NAME}" \
+    --build-arg "GITHUB_USER_NAME=${GITHUB_USER_NAME}" \
     --build-arg "GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}" \
     -t ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG} .
 ```
