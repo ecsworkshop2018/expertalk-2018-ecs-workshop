@@ -143,4 +143,12 @@ Vagrant.configure("2") do |config|
 
   # NOTE: Please copy workspace_config.template to your user home and substitute the required values.
   config.vm.provision "copy-workshop-config", type: "file", source: "~/workspace_config", destination: "~/workspace_config"
+
+  config.vm.provision "setup-workspace-environment", type: "shell", privileged: false, inline: <<-SHELL
+    echo "source ~/workspace_config" >> ~/.zshrc
+  SHELL
+
+  config.vm.provision "set-jenkins-ecr-repo", type: "shell", privileged: false, inline: <<-SHELL
+    echo "JENKINS_ECR_REPOSITORY_PATH='738035286324.dkr.ecr.us-east-1.amazonaws.com/ecs-workshop/jenkins'" >> ~/.zshrc
+  SHELL
 end
