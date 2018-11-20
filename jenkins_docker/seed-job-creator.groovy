@@ -1,12 +1,11 @@
 pipelineJob('seed-job') {
+    triggers {
+        githubPush()
+    }
     definition {
         cpsScm {
             scm {
-                git {
-                    remote {
-                        url('SEED_JOB_REPO_URL')
-                    }
-                }
+                git('SEED_JOB_REPO_URL', "master")
             }
             scriptPath('Jenkinsfile')
         }
