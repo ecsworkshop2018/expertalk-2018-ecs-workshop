@@ -26,11 +26,6 @@ resource "aws_ecs_task_definition" "task_definition" {
   task_role_arn         = "${aws_iam_role.jenkins_task_role.arn}"
 
   volume {
-    name      = "${local.efs_volume_name}"
-    host_path = "${local.efs_host_path}"
-  }
-
-  volume {
     name      = "${local.docker_sock_volume_name}"
     host_path = "/var/run/docker.sock"
   }

@@ -6,10 +6,6 @@
     "essential": true,
     "mountPoints": [
       {
-        "containerPath": "${efs_container_path}",
-        "sourceVolume": "${efs_volume_name}"
-      },
-      {
         "containerPath": "/var/run/docker.sock",
         "sourceVolume": "${docker_sock_volume}"
       }
