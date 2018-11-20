@@ -14,6 +14,7 @@ docker build \
     --build-arg "FIRST_NAME=${FIRST_NAME}" \
     --build-arg "GITHUB_USER_NAME=${GITHUB_USER_NAME}" \
     --build-arg "GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}" \
+    --build-arg "SEED_JOB_REPO_URL=${SEED_JOB_REPO_URL}" \
     -t ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG} .
 ```
 
