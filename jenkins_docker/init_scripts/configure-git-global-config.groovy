@@ -6,10 +6,10 @@ def inst = Jenkins.getInstance()
 
 def desc = inst.getDescriptor("hudson.plugins.git.GitSCM")
 
-desc.setGlobalConfigName("FIRST_NAME-jenkins")
-desc.setGlobalConfigEmail("FIRST_NAME-jenkins@ecsworkshop2018.online")
+desc.setGlobalConfigName("GITHUB_USER_NAME")
+desc.setGlobalConfigEmail("GITHUB_USER_EMAIL")
 
 desc.save()
 
-"git config --global user.name FIRST_NAME-jenkins".execute()
-"git config --global user.email FIRST_NAME-jenkins@ecsworkshop2018.online".execute()
+"git config --global user.name GITHUB_USER_NAME".execute()
+"git config --global user.email GITHUB_USER_EMAIL".execute()

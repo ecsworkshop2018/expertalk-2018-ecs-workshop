@@ -60,9 +60,9 @@ ARG JENKINS_PASSWORD
 
 RUN if [ -z "$JENKINS_PASSWORD" ]; then echo "ERROR: JENKINS_PASSWORD not set"; exit 1; fi
 
-ARG FIRST_NAME
+ARG GITHUB_USER_EMAIL
 
-RUN if [ -z "$FIRST_NAME" ]; then echo "ERROR: FIRST_NAME not set"; exit 1; fi
+RUN if [ -z "$GITHUB_USER_EMAIL" ]; then echo "ERROR: GITHUB_USER_EMAIL not set"; exit 1; fi
 
 ARG GITHUB_USER_NAME
 
@@ -82,11 +82,21 @@ RUN sed -i "s/JENKINS_USER_NAME/${JENKINS_USER_NAME}/g" /usr/share/jenkins/ref/i
 
 RUN sed -i "s/JENKINS_PASSWORD/${JENKINS_PASSWORD}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
 
-RUN sed -i "s/FIRST_NAME/${FIRST_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-git-global-config.groovy
+RUN sed -i "s/GITHUB_USER_EMAIL/${GITHUB_USER_EMAIL}/g" /usr/share/jenkins/ref/init.groovy.d/configure-git-global-config.groovy
+
+RUN sed -i "s/GITHUB_USER_NAME/${GITHUB_USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-git-global-config.groovy
 
 RUN sed -i "s/GITHUB_USER_NAME/${GITHUB_USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-github-credentials.groovy
 
 RUN sed -i "s/GITHUB_ACCESS_TOKEN/${GITHUB_ACCESS_TOKEN}/g" /usr/share/jenkins/ref/init.groovy.d/configure-github-credentials.groovy
 
 RUN sed -i "s|SEED_JOB_REPO_URL|${SEED_JOB_REPO_URL}|g" /seed-job-creator.groovy
+
+RUN mkdir -p /root/.ssh
+
+COPY github_ssh_private_key /root/.ssh/id_rsa
+
+RUN chmod 400 /root/.ssh/id_rsa
+
+RUN ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 

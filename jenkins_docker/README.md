@@ -7,27 +7,27 @@ $(aws ecr get-login --no-include-email --region us-east-1)
 ```bash
 JENKINS_TAG="${FIRST_NAME}-$(date +%s)"
 
+cp ~/.ssh/id_rsa ./github_ssh_private_key
+
 docker build \
     --build-arg "ROOT_URL=https://${FIRST_NAME}-jenkins.ecsworkshop2018.online" \
     --build-arg "JENKINS_USER_NAME=${JENKINS_USER_NAME}" \
     --build-arg "JENKINS_PASSWORD=${JENKINS_PASSWORD}" \
-    --build-arg "FIRST_NAME=${FIRST_NAME}" \
     --build-arg "GITHUB_USER_NAME=${GITHUB_USER_NAME}" \
+    --build-arg "GITHUB_USER_EMAIL=${GITHUB_USER_EMAIL}" \
     --build-arg "GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}" \
     --build-arg "SEED_JOB_REPO_URL=${SEED_JOB_REPO_URL}" \
     -t ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG} .
+
+rm ./github_ssh_private_key
 ```
 
 ### Running the container locally
 
-Stop and remove container if created previously
+Stop and remove container if created previously, then run jenkins
 
 ```bash
-docker rm -f jenkins
-```
-
-```bash
-docker run -p 8080:8080 --name jenkins \
+docker rm -f jenkins; docker run -p 8080:8080 --name jenkins \
     -v /var/run/docker.sock:/var/run/docker.sock \
     -d ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG}
 ```
