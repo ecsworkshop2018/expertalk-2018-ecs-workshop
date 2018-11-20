@@ -89,3 +89,8 @@ resource aws_iam_role_policy_attachment "jenkins_task_role_policy_attachment" {
   role       = "${aws_iam_role.jenkins_task_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/PowerUserAccess"
 }
+
+resource "aws_iam_role_policy_attachment" "jenkins_task_role_allow_iam_access" {
+  role = "${aws_iam_role.jenkins_task_role.name}"
+  policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
+}

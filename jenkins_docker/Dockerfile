@@ -40,6 +40,14 @@ RUN cd /tmp; \
 
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 
+RUN mkdir -p /root/.ssh
+
+COPY github_ssh_private_key /root/.ssh/id_rsa
+
+RUN chmod 400 /root/.ssh/id_rsa
+
+RUN ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
 COPY plugins.txt /usr/share/jenkins/ref/plugins.txt
 
 RUN /usr/local/bin/install-plugins.sh < /usr/share/jenkins/ref/plugins.txt
@@ -93,12 +101,3 @@ RUN sed -i "s/GITHUB_USER_NAME/${GITHUB_USER_NAME}/g" /usr/share/jenkins/ref/ini
 RUN sed -i "s/GITHUB_ACCESS_TOKEN/${GITHUB_ACCESS_TOKEN}/g" /usr/share/jenkins/ref/init.groovy.d/configure-github-credentials.groovy
 
 RUN sed -i "s|SEED_JOB_REPO_URL|${SEED_JOB_REPO_URL}|g" /seed-job-creator.groovy
-
-RUN mkdir -p /root/.ssh
-
-COPY github_ssh_private_key /root/.ssh/id_rsa
-
-RUN chmod 400 /root/.ssh/id_rsa
-
-RUN ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-
