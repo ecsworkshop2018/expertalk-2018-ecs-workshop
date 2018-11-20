@@ -8,7 +8,7 @@ $(aws ecr get-login --no-include-email --region us-east-1)
 JENKINS_TAG="${FIRST_NAME}-$(date +%s)"
 
 docker build \
-    --build-arg "ROOT_URL=http://${FIRST_NAME}.ecsworkshop2018.online/jenkins" \
+    --build-arg "ROOT_URL=https://${FIRST_NAME}-jenkins.ecsworkshop2018.online" \
     --build-arg "JENKINS_USER_NAME=${JENKINS_USER_NAME}" \
     --build-arg "JENKINS_PASSWORD=${JENKINS_PASSWORD}" \
     --build-arg "FIRST_NAME=${FIRST_NAME}" \
@@ -46,4 +46,15 @@ PREVIOUS_JENKINS_IMAGE_CONFIG=$(cat ../terraform/jenkins/terraform.tfvars | grep
 NEW_JENKINS_IMAGE_CONFIG="jenkins_docker_image=\"${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG}\""
 
 sed -i "s|${PREVIOUS_JENKINS_IMAGE_CONFIG}|${NEW_JENKINS_IMAGE_CONFIG}|g" ../terraform/jenkins/terraform.tfvars
+```
+```
+
+### Update user first name as terraform variable.
+
+```bash
+PREVIOUS_USER_FIRST_NAME=$(cat ../terraform/jenkins/terraform.tfvars | grep user_first_name)
+
+NEW_USER_FIRST_NAME="user_first_name=\"${FIRST_NAME}\""
+
+sed -i "s|${PREVIOUS_USER_FIRST_NAME}|${NEW_USER_FIRST_NAME}|g" ../terraform/jenkins/terraform.tfvars
 ```
