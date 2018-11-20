@@ -47,7 +47,7 @@ module "alb" {
   public_subnet_ids           = ["${data.aws_subnet_ids.dev_vpc_public_subnet_ids.ids}"]
   certificate_arn             = "${data.aws_acm_certificate.jenkins_certificate.arn}"
   health_check_allowed_codes  = "200,302"
-  health_check_path           = "/"
+  health_check_path           = "/whoAmI"
 }
 
 resource "aws_ecs_cluster" "jenkins_cluster" {
@@ -98,7 +98,7 @@ resource aws_autoscaling_group "jenkins_asg" {
   initial_lifecycle_hook {
     name                 = "asg-drain-before-terminate-hook"
     default_result       = "CONTINUE"
-    heartbeat_timeout    = "600"
+    heartbeat_timeout    = "300"
     lifecycle_transition = "autoscaling:EC2_INSTANCE_TERMINATING"
 
     notification_metadata = <<EOF

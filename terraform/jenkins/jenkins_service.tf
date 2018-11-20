@@ -1,4 +1,5 @@
 resource "aws_ecs_service" "service" {
+  depends_on                         = ["module.alb"]
   name                               = "${local.service_name}"
   cluster                            = "${aws_ecs_cluster.jenkins_cluster.id}"
   task_definition                    = "${aws_ecs_task_definition.task_definition.arn}"
