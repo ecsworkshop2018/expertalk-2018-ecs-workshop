@@ -82,6 +82,8 @@ RUN sed -i "s/JENKINS_USER_NAME/${JENKINS_USER_NAME}/g" /usr/share/jenkins/ref/i
 
 RUN sed -i "s/JENKINS_PASSWORD/${JENKINS_PASSWORD}/g" /usr/share/jenkins/ref/init.groovy.d/configure-credentials.groovy
 
+RUN sed -i "s/JENKINS_USER_NAME/${JENKINS_USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-access-control-strategy-for-builds.groovy
+
 RUN sed -i "s/GITHUB_USER_EMAIL/${GITHUB_USER_EMAIL}/g" /usr/share/jenkins/ref/init.groovy.d/configure-git-global-config.groovy
 
 RUN sed -i "s/GITHUB_USER_NAME/${GITHUB_USER_NAME}/g" /usr/share/jenkins/ref/init.groovy.d/configure-git-global-config.groovy
