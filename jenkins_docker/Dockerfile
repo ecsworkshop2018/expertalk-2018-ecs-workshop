@@ -33,6 +33,8 @@ RUN pip3 install virtualenv
 RUN apt-get install -y jq
 RUN pip3 install yq
 
+RUN apt-get install -y zip
+
 # install terraform
 RUN cd /tmp; \
     wget --show-progress https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip; \
