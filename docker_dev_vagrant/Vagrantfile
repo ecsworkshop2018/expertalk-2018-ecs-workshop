@@ -163,4 +163,8 @@ Vagrant.configure("2") do |config|
     ssh-keygen -t rsa -b 4096 -C "${GITHUB_USER_EMAIL}" -N "" -f ~/.ssh/id_rsa
   SHELL
 
+  config.vm.provision "install-zip", type: "shell", privileged: true, inline: <<-SHELL
+    apt-get install -y zip
+  SHELL
+
 end

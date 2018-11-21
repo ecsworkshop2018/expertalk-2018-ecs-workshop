@@ -6,7 +6,7 @@ resource "aws_ecs_service" "service" {
   deployment_maximum_percent         = 200
   deployment_minimum_healthy_percent = 100
   desired_count                      = 1
-  health_check_grace_period_seconds  = 60
+  health_check_grace_period_seconds  = 30
 
   load_balancer {
     //target_group_arn = "${aws_alb_target_group.alb_jenkins_target_group.arn}"
@@ -52,7 +52,7 @@ data "template_file" "container_definitions_json" {
     docker_image       = "${var.jenkins_docker_image}"
     container_port     = "${local.jenkins_container_port}"
     log_group          = "${local.jenkins_log_group_name}"
-    memory_reservation = 1536
+    memory_reservation = 768
     efs_container_path = "${local.efs_host_path}"
     efs_volume_name    = "${local.efs_volume_name}"
     region             = "${local.region}"
