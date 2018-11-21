@@ -61,7 +61,7 @@ resource "aws_key_pair" "jenkins_ssh_key" {
 
 resource aws_launch_configuration "jenkins_lc" {
   image_id             = "ami-07eb698ce660402d2"                                     // ECS AMI
-  instance_type        = "m3.medium"
+  instance_type        = "t3.small"
   iam_instance_profile = "${aws_iam_instance_profile.jenkins_instance_profile.name}"
 
   security_groups = ["${aws_security_group.jenkins_ec2_sg.id}", "${aws_security_group.efs_client_sg.id}"]
