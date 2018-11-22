@@ -3,8 +3,8 @@ resource "aws_ecs_service" "service" {
   name                               = "${local.service_name}"
   cluster                            = "${aws_ecs_cluster.jenkins_cluster.id}"
   task_definition                    = "${aws_ecs_task_definition.task_definition.arn}"
-  deployment_maximum_percent         = 200
-  deployment_minimum_healthy_percent = 100
+  deployment_maximum_percent         = 100
+  deployment_minimum_healthy_percent = 0
   desired_count                      = 1
   health_check_grace_period_seconds  = 30
 
@@ -52,8 +52,8 @@ data "template_file" "container_definitions_json" {
     docker_image       = "${var.jenkins_docker_image}"
     container_port     = "${local.jenkins_container_port}"
     log_group          = "${local.jenkins_log_group_name}"
-    memory             = 768
-    cpu                = 512
+    memory             = 1536
+    cpu                = 1536
     efs_container_path = "${local.efs_host_path}"
     efs_volume_name    = "${local.efs_volume_name}"
     region             = "${local.region}"
