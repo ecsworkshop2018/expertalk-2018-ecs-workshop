@@ -52,7 +52,8 @@ data "template_file" "container_definitions_json" {
     docker_image       = "${var.jenkins_docker_image}"
     container_port     = "${local.jenkins_container_port}"
     log_group          = "${local.jenkins_log_group_name}"
-    memory_reservation = 768
+    memory             = 768
+    cpu                = 512
     efs_container_path = "${local.efs_host_path}"
     efs_volume_name    = "${local.efs_volume_name}"
     region             = "${local.region}"

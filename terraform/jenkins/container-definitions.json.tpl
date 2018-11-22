@@ -2,7 +2,8 @@
   {
     "name": "${service_name}",
     "image": "${docker_image}",
-    "memoryReservation": ${memory_reservation},
+    "memory": ${memory},
+    "cpu": ${cpu},
     "essential": true,
     "mountPoints": [
       {
