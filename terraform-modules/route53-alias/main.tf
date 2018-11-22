@@ -4,7 +4,7 @@ data "aws_route53_zone" "hosted_zone" {
 }
 
 resource "aws_cloudformation_stack" "application-dns" {
-  name          = "${var.app_name}-dns-${var.env}"
+  name          = "${var.unique}-${var.app_name}-dns-${var.env}"
   template_body = "${file("${path.module}/dns_name.yaml")}"
 
   parameters {

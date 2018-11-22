@@ -11,3 +11,5 @@ variable "lb_zone_id" {}
 variable "lb_dns_name" {}
 
 variable "dns_record_set_name" {}
+
+variable "unique" {}

@@ -11,6 +11,7 @@ module "dns" {
   dns_record_set_name = "${local.unique}-jenkins.ecsworkshop2018.online"
   env                 = "dev"
   app_name            = "jenkins"
+  unique              = "${local.unique}"
 }
 
 data "aws_acm_certificate" "jenkins_certificate" {
