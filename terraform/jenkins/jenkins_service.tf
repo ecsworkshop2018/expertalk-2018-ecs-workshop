@@ -54,8 +54,6 @@ data "template_file" "container_definitions_json" {
     log_group          = "${local.jenkins_log_group_name}"
     memory             = 1536
     cpu                = 1536
-    efs_container_path = "${local.efs_host_path}"
-    efs_volume_name    = "${local.efs_volume_name}"
     region             = "${local.region}"
     docker_sock_volume = "${local.docker_sock_volume_name}"
   }
