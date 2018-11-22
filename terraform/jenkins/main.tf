@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket         = "ecs-workshop-terraform-state-jenkins"
-    key            = "jenkins.tfstate"
+    key            = "${unique}-jenkins.tfstate"
     region         = "us-east-1"
     encrypt        = true
     dynamodb_table = "Terraform-Lock-Table"
