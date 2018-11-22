@@ -1,3 +1,12 @@
+locals {
+  service_name            = "jenkins"
+  jenkins_log_group_name  = "${local.unique}-jenkins-logs"
+  jenkins_container_port  = 8080
+  docker_sock_volume_name = "dockerSockVolume"
+}
+
+variable "jenkins_docker_image" {}
+
 resource "aws_ecs_service" "service" {
   depends_on                         = ["module.alb"]
   name                               = "${local.service_name}"
@@ -9,7 +18,6 @@ resource "aws_ecs_service" "service" {
   health_check_grace_period_seconds  = 30
 
   load_balancer {
-    //target_group_arn = "${aws_alb_target_group.alb_jenkins_target_group.arn}"
     target_group_arn = "${module.alb.alb_https_listener_default_tg_arn}"
     container_name   = "${local.service_name}"
     container_port   = "${local.jenkins_container_port}"
@@ -35,15 +43,6 @@ resource "aws_ecs_task_definition" "task_definition" {
   }
 }
 
-locals {
-  service_name            = "jenkins"
-  jenkins_log_group_name  = "jenkins_logs"
-  jenkins_container_port  = 8080
-  docker_sock_volume_name = "dockerSockVolume"
-}
-
-variable "jenkins_docker_image" {}
-
 data "template_file" "container_definitions_json" {
   template = "${file("./container-definitions.json.tpl")}"
 
@@ -65,7 +64,7 @@ resource "aws_cloudwatch_log_group" "ecs_log_group" {
 }
 
 resource "aws_iam_role" "jenkins_task_role" {
-  name = "jenkins-task-role"
+  name = "${local.unique}-jenkins-task-role"
 
   assume_role_policy = <<EOF
 {
@@ -90,6 +89,6 @@ resource aws_iam_role_policy_attachment "jenkins_task_role_policy_attachment" {
 }
 
 resource "aws_iam_role_policy_attachment" "jenkins_task_role_allow_iam_access" {
-  role = "${aws_iam_role.jenkins_task_role.name}"
+  role       = "${aws_iam_role.jenkins_task_role.name}"
   policy_arn = "arn:aws:iam::aws:policy/IAMFullAccess"
 }

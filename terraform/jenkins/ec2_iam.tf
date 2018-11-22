@@ -1,5 +1,5 @@
 resource "aws_iam_role" "jenkins_instance_ec2" {
-  name = "jenkins-role"
+  name = "${local.unique}-jenkins-role"
 
   assume_role_policy = <<EOF
 {

@@ -52,9 +52,15 @@ sed -i "s|${PREVIOUS_JENKINS_IMAGE_CONFIG}|${NEW_JENKINS_IMAGE_CONFIG}|g" ../ter
 ### Update user first name as terraform variable.
 
 ```bash
-PREVIOUS_USER_FIRST_NAME=$(cat ../terraform/jenkins/terraform.tfvars | grep user_first_name)
+PREVIOUS_UNIQUE_ID=$(cat ../terraform/jenkins/terraform.tfvars | grep unique_identifier)
 
-NEW_USER_FIRST_NAME="user_first_name=\"${FIRST_NAME}\""
+NEW_UNIQUE_ID="unique_identifier=\"${FIRST_NAME}\""
 
-sed -i "s|${PREVIOUS_USER_FIRST_NAME}|${NEW_USER_FIRST_NAME}|g" ../terraform/jenkins/terraform.tfvars
+sed -i "s|${PREVIOUS_UNIQUE_ID}|${NEW_UNIQUE_ID}|g" ../terraform/jenkins/terraform.tfvars
+```
+
+### Upload public key to github
+
+```bash
+cat ~/.ssh/id_rsa.pub
 ```
