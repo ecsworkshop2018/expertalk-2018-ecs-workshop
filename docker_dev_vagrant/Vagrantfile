@@ -70,6 +70,10 @@ Vagrant.configure("2") do |config|
     apt-get update
   SHELL
 
+  config.vm.provision "install-dos2unix", type: "shell", inline: <<-SHELL
+    apt-get install -y dos2unix
+  SHELL
+
   config.vm.provision "install-pip3", type: "shell", inline: <<-SHELL
     apt-get install -y python3-pip
   SHELL
@@ -142,6 +146,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "copy-workshop-config", type: "file", source: "~/workspace_config", destination: "~/workspace_config"
 
   config.vm.provision "setup-workspace-environment", type: "shell", privileged: false, inline: <<-SHELL
+    dos2unix ~/workspace_config
     echo "source ~/workspace_config" >> ~/.zshrc
   SHELL
 
