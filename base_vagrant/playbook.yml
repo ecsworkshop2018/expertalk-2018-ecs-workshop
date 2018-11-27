@@ -1,0 +1,138 @@
+---
+- hosts: all
+  become: true
+
+  tasks:
+    - name: update
+      apt:
+        update_cache: yes
+    - name: install dos2unix
+      apt:
+        name: dos2unix
+        state: present
+    - name: install pip3
+      apt:
+        name: python3-pip
+        state: present
+    - name: install jq
+      apt:
+        name: jq
+        state: present
+    - name: install csvtool
+      apt:
+        name: csvtool
+        state: present
+    - name: install docker
+      import_role:
+        name: geerlingguy.docker
+      vars:
+        docker_edition: 'ce'
+        docker_package: "docker-{{ docker_edition }}=18.06.1~ce~3-0~ubuntu"
+        docker_package_state: present
+        docker_install_compose: false
+        docker_users:
+          - vagrant
+    - name: install java
+      apt:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - openjdk-8-jre
+        - openjdk-8-jdk
+    - name: set java home
+      lineinfile:
+        dest: /etc/environment
+        state: present
+        regexp: '^JAVA_HOME'
+        line: 'JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/'
+    - name: install maven
+      apt:
+        name: maven
+        state: present
+    - name: install zsh
+      apt:
+        name: zsh
+        state: present
+    - name: set zsh for vagrant user
+      user:
+        name: vagrant
+        shell: /bin/zsh
+    - name: checkout oh-my-zsh
+      become: yes
+      become_user: vagrant
+      git:
+        repo: 'https://github.com/robbyrussell/oh-my-zsh.git'
+        dest: ~/.oh-my-zsh
+        update: no
+    - name: create zshrc
+      become: yes
+      become_user: vagrant
+      copy:
+        src: ~/.oh-my-zsh/templates/zshrc.zsh-template
+        dest: ~/.zshrc
+        force: no
+    - name: Add zsh prompt
+      become: yes
+      become_user: vagrant
+      lineinfile:
+        dest: ~/.zshrc
+        state: present
+        regexp: '^PROMPT'
+        line: 'PROMPT="%{$fg[red]%}%n%{$reset_color%} ${PROMPT}"'
+    - name: Update path to include local bin
+      become: yes
+      become_user: vagrant
+      lineinfile:
+        dest: ~/.zshrc
+        state: present
+        regexp: '^export PATH'
+        line: 'export PATH=${HOME}/.local/bin:${HOME}/bin:${PATH}'
+    - name: Set local all
+      become: yes
+      become_user: vagrant
+      lineinfile:
+        dest: ~/.zshrc
+        state: present
+        regexp: '^export LC_ALL'
+        line: 'export LC_ALL="en_US.UTF-8"'
+    - name: Set local all
+      become: yes
+      become_user: vagrant
+      lineinfile:
+        dest: ~/.zshrc
+        state: present
+        regexp: '^export LC_CTYPE'
+        line: 'export LC_CTYPE="en_US.UTF-8"'
+    - name: install unzip
+      apt:
+        name: unzip
+        state: present
+    - name: install terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/0.11.10/terraform_0.11.10_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        creates: /usr/local/bin/terraform
+    - name: install zip
+      apt:
+        name: zip
+        state: present
+    - name: Set python alias
+      become: yes
+      become_user: vagrant
+      lineinfile:
+        dest: ~/.zshrc
+        state: present
+        regexp: '^alias python'
+        line: 'alias python=python3'
+    - name: Install aws cli
+      become: yes
+      become_user: vagrant
+      pip:
+        name: awscli
+        extra_args: --upgrade --user
+        executable: pip3
+    - name: install virtualenv
+      pip:
+        name: virtualenv
+        executable: pip3

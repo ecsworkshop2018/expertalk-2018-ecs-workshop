@@ -53,18 +53,14 @@ com_crashlytics_export_strings.xml
 crashlytics.properties
 crashlytics-build.properties
 
-docker_dev_vagrant/*.log
 #### joe made this: https://goel.io/joe
 
 #####=== Java ===#####
-
-*.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
 # Package Files #
-*.jar
 *.war
 *.ear
 
@@ -93,8 +89,6 @@ tfplan.out
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
-*.py[cod]
-
 # C extensions
 *.so
 
@@ -106,7 +100,6 @@ develop-eggs/
 dist/
 downloads/
 eggs/
-lib/
 lib64/
 parts/
 sdist/
@@ -145,5 +138,6 @@ coverage.xml
 docs/_build/
 
 # PyBuilder
-target/
 /jenkins_docker/github_ssh_private_key
+base_vagrant/ecsworkshop.box
+base_vagrant/playbook.retry
