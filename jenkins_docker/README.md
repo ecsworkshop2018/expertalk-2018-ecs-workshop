@@ -9,6 +9,8 @@ JENKINS_TAG="${FIRST_NAME}-$(date +%s)"
 
 cp ~/.ssh/id_rsa ./github_ssh_private_key
 
+docker build -t ecs-workshop/jenkins-base:lts ./base_docker
+
 docker build \
     --build-arg "ROOT_URL=https://${FIRST_NAME}-jenkins.ecsworkshop2018.online" \
     --build-arg "JENKINS_USER_NAME=${JENKINS_USER_NAME}" \
