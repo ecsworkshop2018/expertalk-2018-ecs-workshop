@@ -130,9 +130,16 @@
       become_user: vagrant
       pip:
         name: awscli
-        extra_args: --upgrade --user
+        extra_args: --user
         executable: pip3
     - name: install virtualenv
       pip:
         name: virtualenv
         executable: pip3
+    - name: pull jenkins base image
+      command: docker pull kaushikchandrashekar/ecs-workshop-jenkins:v1.0
+    - name: cleanup the image
+      script: cleanup.sh
+      args:
+        creates: /var/cleanup_done
+
