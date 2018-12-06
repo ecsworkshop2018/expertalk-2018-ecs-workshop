@@ -1,4 +1,4 @@
-FROM ecs-workshop/jenkins-base:lts
+FROM kaushikchandrashekar/ecs-workshop-jenkins:v1.0
 
 ENV JAVA_OPTS="-Djenkins.install.runSetupWizard=false"
 
