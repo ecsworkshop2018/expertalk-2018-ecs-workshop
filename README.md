@@ -39,7 +39,7 @@ vagrant ssh
 Check docker is working
 
 ```bash
-vagrant ➜  ~ docker info
+vagrant ➜  docker info
 Containers: 0
  Running: 0
  Paused: 0
@@ -50,29 +50,31 @@ Server Version: 18.06.1-ce
 ```
 Check images
 ```bash
-vagrant ➜  ~ docker images
+vagrant ➜  docker images
 REPOSITORY                                  TAG                 IMAGE ID            CREATED             SIZE
 kaushikchandrashekar/ecs-workshop-jenkins   v1.0                2a93fab2fcdc        9 days ago          1.6GB
 jenkins/jenkins                             lts                 d7c5abfe8477        4 weeks ago         703MB
 ```
 Check terraform version
 ```bash
-vagrant ➜  ~ terraform -version
+vagrant ➜  terraform -version
 Terraform v0.11.10
 ```
 Check java setup
 ```bash
-vagrant ➜  ~ echo $JAVA_HOME
+vagrant ➜  echo $JAVA_HOME
 /usr/lib/jvm/java-8-openjdk-amd64/
 ```
 check whether dos2unix is installed
 
 ```bash
-vagrant ➜  ~ which dos2unix
+vagrant ➜  which dos2unix
 /usr/bin/dos2unix
 ```
 
 ## Setup steps during workshop
+
+*Note: Just follow these steps. Its ok even if you do not understand everything. We are going to cover these during the workshop*
 
 ### Fork ecsworkshop repositories
 
@@ -94,7 +96,7 @@ Cloning into 'expertalk-2018-ecs-workshop'...
 
 ### Download aws access key details (required to configure AWS cli later).
 
-Login to AWS account. Reset password for first time. 
+Login to AWS account (are going to provide access to AWS during workshop). Reset password for first time. 
 
 Create a new AWS accessKey and download *accessKeys.csv* to your user home directory. 
 
@@ -128,6 +130,7 @@ GITHUB_ACCESS_TOKEN="<your github personal access token>"
 SEED_JOB_REPO_URL="<your seed job repo url>"
 ```
 Details:
+
 FIRST_NAME - make sure this is unique, prefer to put the AWS username for this. 
 JENKINS_USER_NAME - Choose a name of your Jenkins admin (every participant will have his own Jenkins). 
 JENKINS_PASSWORD - Choose a password for your Jenkins admin user.  
@@ -169,7 +172,50 @@ vagrant ➜ rm ./github_ssh_private_key
 
 ### Push jenkins image to ECR in AWS account
 
-```bash
+```console
+vagrant ➜  $(aws ecr get-login --no-include-email --region us-east-1)
+vagrant ➜  docker push ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG}
+```
+
+### Provision Jenkins infrastructure and deploy jenkins
+
+#### Update Jenkins image (the one we just build) in terraform tfvars
+
+```console
+vagrant ➜  PREVIOUS_JENKINS_IMAGE_CONFIG=$(cat ../terraform/jenkins/terraform.tfvars | grep jenkins_docker_image)
+vagrant ➜  NEW_JENKINS_IMAGE_CONFIG="jenkins_docker_image=\"${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG}\""
+vagrant ➜  sed -i "s|${PREVIOUS_JENKINS_IMAGE_CONFIG}|${NEW_JENKINS_IMAGE_CONFIG}|g" ../terraform/jenkins/terraform.tfvars
+```
+
+#### Update user name in terraform tfvars (to seperate your jenkins instance from others)
+
+```console
+vagrant ➜  PREVIOUS_UNIQUE_ID=$(cat ../terraform/jenkins/terraform.tfvars | grep unique_identifier)
+vagrant ➜  NEW_UNIQUE_ID="unique_identifier=\"${FIRST_NAME}\""
+vagrant ➜  sed -i "s|${PREVIOUS_UNIQUE_ID}|${NEW_UNIQUE_ID}|g" ../terraform/jenkins/terraform.tfvars
+```
+
+### Update terraform with your unique name
+
+open `expertalk-2018-ecs-workshop` as project in your IDE.
+open file `expertalk-2018-ecs-workshop/terraform/jenkins/main.tf`
+Put in your unique name (possibly same as your AWS username) at the place of ${unique} in the following code:
+
+```HCL
+backend "s3" {
+    bucket         = "ecs-workshop-terraform-state-jenkins"
+    key            = "${unique}-jenkins.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    dynamodb_table = "Terraform-Lock-Table"
+  }
+```
+
+### Provision the jenkins using terraform
+
+```console
+vagrant ➜  cd expertalk-2018-ecs-workshop
+vagrant ➜  cd terraform/jenkins
 ```
 
 ## Pre-workshop tasks (for instructor)
