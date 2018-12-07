@@ -328,3 +328,15 @@ We will
 - Add a scaling policy to the ASG based on the schedulable containers.
 - Observe ASG desired count scale in accordance with service scaling.
 - Observe ASG scaling to accomodate deployments.
+
+### Demo 1 - Cluster updates and service uptime
+
+We will
+- See how we can maintain service uptime during cluster updates
+- Walk through lambda based setup for cluster draining
+
+### Demo 2 - Bringing up an environment on demand
+
+We will
+- Add another environment
+
