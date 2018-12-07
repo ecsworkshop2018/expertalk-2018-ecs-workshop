@@ -80,8 +80,8 @@ vagrant ➜  which dos2unix
 
 Fork following repositories to your github user
 
-https://github.com/ecsworkshop2018/expertalk-2018-ecs-workshop
-https://github.com/ecsworkshop2018/seed_job
+https://github.com/ecsworkshop2018/expertalk-2018-ecs-workshop <br />
+https://github.com/ecsworkshop2018/seed_job <br />
 https://github.com/ecsworkshop2018/odin
 
 ### Clone repositories
@@ -131,13 +131,13 @@ SEED_JOB_REPO_URL="<your seed job repo url>"
 ```
 Details:
 
-FIRST_NAME - make sure this is unique, prefer to put the AWS username for this. 
-JENKINS_USER_NAME - Choose a name of your Jenkins admin (every participant will have his own Jenkins). 
-JENKINS_PASSWORD - Choose a password for your Jenkins admin user.  
-GITHUB_USER_NAME - Put in your github user name (git information is used to configure git during workshop)
-GITHUB_USER_EMAIL - Put in your github email.
-GITHUB_ACCESS_TOKEN - Put in the personal access token we created earlier.
-SEED_JOB_REPO_URL - Put in the https github url of the seed job (the one we forked earlier). 
+FIRST_NAME - make sure this is unique, prefer to put the AWS username for this. <br />
+JENKINS_USER_NAME - Choose a name of your Jenkins admin (every participant will have his own Jenkins). <br />
+JENKINS_PASSWORD - Choose a password for your Jenkins admin user.  <br />
+GITHUB_USER_NAME - Put in your github user name (git information is used to configure git during workshop) <br />
+GITHUB_USER_EMAIL - Put in your github email. <br />
+GITHUB_ACCESS_TOKEN - Put in the personal access token we created earlier. <br />
+SEED_JOB_REPO_URL - Put in the https github url of the seed job (the one we forked earlier). <br />
 
 ### Build Development box (VM) which are going to use during workshop
 
@@ -199,7 +199,7 @@ vagrant ➜  sed -i "s|${PREVIOUS_UNIQUE_ID}|${NEW_UNIQUE_ID}|g" ../terraform/je
 
 open `expertalk-2018-ecs-workshop` as project in your IDE.
 open file `expertalk-2018-ecs-workshop/terraform/jenkins/main.tf`
-Put in your unique name (possibly same as your AWS username) at the place of ${unique} in the following code:
+Put in your unique name (possibly same as your AWS username) at the place of *${unique}* in the following code:
 
 ```HCL
 backend "s3" {
@@ -211,12 +211,48 @@ backend "s3" {
   }
 ```
 
-### Provision the jenkins using terraform
+### Prepare jenkins python virtual environment
+
+This is required because terraform uses a python script and requires certain dependencies to be available. Setting the virtual environment will setup those dependencies
 
 ```console
 vagrant ➜  cd expertalk-2018-ecs-workshop
 vagrant ➜  cd terraform/jenkins
+vagrant ➜  virtualenv venv
+vagrant ➜  source venv/bin/activate
+(venv) vagrant ➜  pip install -r requirements.txt
 ```
+
+### Provision the jenkins using terraform
+
+
+```console
+(venv) vagrant ➜  pwd
+/home/vagrant/repos/expertalk-2018-ecs-workshop/terraform/jenkins
+(venv) vagrant ➜  terraform init
+Initializing modules...
+...
+```
+```console
+(venv) vagrant ➜  terraform plan -out tf_plan
+Acquiring state lock. This may take a few moments...
+Refreshing Terraform state in-memory prior to plan...
+...
+```
+```console
+(venv) vagrant ➜  terraform apply tf_plan
+Acquiring state lock. This may take a few moments...
+Releasing state lock. This may take a few moments...
+Acquiring state lock. This may take a few moments...
+aws_iam_role.jenkins_instance_ec2: Creating...
+...
+```
+
+### Access jenkins
+
+Now your jenkins should be available at :
+
+https://{your-unique-name}-jenkins.ecsworkshop2018.online/
 
 ## Pre-workshop tasks (for instructor)
 
