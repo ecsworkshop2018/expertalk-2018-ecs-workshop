@@ -68,7 +68,8 @@ vagrant ➜  ~ echo $JAVA_HOME
 check whether dos2unix is installed
 
 ```bash
-which dos2unix
+vagrant ➜  ~ which dos2unix
+/usr/bin/dos2unix
 ```
 
 ## Setup steps during workshop
@@ -103,6 +104,8 @@ Use following link to setup a personal GitHub access token.
 
 https://support.cloudbees.com/hc/en-us/articles/234710368-GitHub-User-Scopes-and-Organization-Permission
 
+Note it down somewhere as it will not be available again. This is required in the setup below. 
+
 ### Setup workspace config
 
 Go to workspace config template and copy it to user home directory.
@@ -113,7 +116,7 @@ Go to workspace config template and copy it to user home directory.
 ➜  cd docker_dev_vagrant/
 ➜  cp workspace_config.template ~/workspace_config
 ```
-Open ~/workspace_config in any text editor of your choise. Add required information.
+Open ~/workspace_config in any text editor of your choise. Add required information and save the file.
 
 ```
 FIRST_NAME="<your first name>"
@@ -128,10 +131,46 @@ Details:
 FIRST_NAME - make sure this is unique, prefer to put the AWS username for this. 
 JENKINS_USER_NAME - Choose a name of your Jenkins admin (every participant will have his own Jenkins). 
 JENKINS_PASSWORD - Choose a password for your Jenkins admin user.  
-GITHUB_USER_NAME - 
-GITHUB_USER_EMAIL
-GITHUB_ACCESS_TOKEN
-SEED_JOB_REPO_URL
+GITHUB_USER_NAME - Put in your github user name (git information is used to configure git during workshop)
+GITHUB_USER_EMAIL - Put in your github email.
+GITHUB_ACCESS_TOKEN - Put in the personal access token we created earlier.
+SEED_JOB_REPO_URL - Put in the https github url of the seed job (the one we forked earlier). 
+
+### Build Development box (VM) which are going to use during workshop
+
+```bash
+➜  cd ecsworkshop/
+➜  cd expertalk-2018-ecs-workshop/
+➜  cd docker_dev_vagrant/
+➜  vagrant up
+➜  vagrant ssh
+```
+
+## Setup your jenkins
+
+### Build your jenkins image
+
+```console
+vagrant ➜  cd repos/expertalk-2018-ecs-workshop/jenkins_docker/
+vagrant ➜  JENKINS_TAG="${FIRST_NAME}-$(date +%s)"
+vagrant ➜  cp ~/.ssh/id_rsa ./github_ssh_private_key
+vagrant ➜  docker build \
+    --build-arg "ROOT_URL=https://${FIRST_NAME}-jenkins.ecsworkshop2018.online" \
+    --build-arg "JENKINS_USER_NAME=${JENKINS_USER_NAME}" \
+    --build-arg "JENKINS_PASSWORD=${JENKINS_PASSWORD}" \
+    --build-arg "GITHUB_USER_NAME=${GITHUB_USER_NAME}" \
+    --build-arg "GITHUB_USER_EMAIL=${GITHUB_USER_EMAIL}" \
+    --build-arg "GITHUB_ACCESS_TOKEN=${GITHUB_ACCESS_TOKEN}" \
+    --build-arg "SEED_JOB_REPO_URL=${SEED_JOB_REPO_URL}" \
+    -t ${JENKINS_ECR_REPOSITORY_PATH}:${JENKINS_TAG} .
+    ...
+vagrant ➜ rm ./github_ssh_private_key
+```
+
+### Push jenkins image to ECR in AWS account
+
+```bash
+```
 
 ## Pre-workshop tasks (for instructor)
 
