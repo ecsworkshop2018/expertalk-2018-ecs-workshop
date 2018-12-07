@@ -303,4 +303,15 @@ Refer: https://github.com/ecsworkshop2018/odin-infrastructure/blob/master/README
 
 Execute the terraform/Jenkins job to deploy service thor. 
 
-### Exercise 6 - 
+### Exercise 6 - Adaptive cluster with mapped services
+
+There exists a platform through which clusters and its services can be provisioned.
+
+We will
+- Create a mapping for a cluster with no services.
+- Provision Asgard cluster using the platform.
+- Add Odin service on the cluster.
+- Add another service (Thor) to the cluster.
+- Update Odin docker image and redeploy on the cluster. 
+- Move Thor to Midgard (Earth) cluster.
+
