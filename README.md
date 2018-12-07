@@ -315,3 +315,16 @@ We will
 - Update Odin docker image and redeploy on the cluster. 
 - Move Thor to Midgard (Earth) cluster.
 
+### Excercise 7 - Service scaling when under load
+
+We will
+- Add a scaling policy to the service.
+- Generate some load on our services by triggering multiple request.
+- Observe the service scaling under load.
+
+### Excercise 8 - Cluster scaling to accomodate service scaling
+
+We will
+- Add a scaling policy to the ASG based on the schedulable containers.
+- Observe ASG desired count scale in accordance with service scaling.
+- Observe ASG scaling to accomodate deployments.
