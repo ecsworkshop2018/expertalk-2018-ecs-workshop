@@ -36,5 +36,37 @@ Get into vagrant vm.
 ```bash
 vagrant ssh
 ```
+Check docker is working
 
+```bash
+vagrant ➜  ~ docker info
+Containers: 0
+ Running: 0
+ Paused: 0
+ Stopped: 0
+Images: 2
+Server Version: 18.06.1-ce
+...
+```
+Check images
+```bash
+vagrant ➜  ~ docker images
+REPOSITORY                                  TAG                 IMAGE ID            CREATED             SIZE
+kaushikchandrashekar/ecs-workshop-jenkins   v1.0                2a93fab2fcdc        9 days ago          1.6GB
+jenkins/jenkins                             lts                 d7c5abfe8477        4 weeks ago         703MB
+```
+Check terraform version
+```bash
+vagrant ➜  ~ terraform -version
+Terraform v0.11.10
+```
+Check java setup
+```bash
+vagrant ➜  ~ echo $JAVA_HOME
+/usr/lib/jvm/java-8-openjdk-amd64/
+```
+check whether dos2unix is installed
 
+```bash
+which dos2unix
+```
