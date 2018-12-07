@@ -86,7 +86,7 @@ https://github.com/ecsworkshop2018/odin
 
 ### Clone repositories
 
-Open terminal or git bash (*on host machine not VM*)
+Open terminal or git bash (**on host machine not VM**)
 
 ```bash
 ➜  cd ecsworkshop/
@@ -96,9 +96,9 @@ Cloning into 'expertalk-2018-ecs-workshop'...
 
 ### Download aws access key details (required to configure AWS cli later).
 
-Login to AWS account (are going to provide access to AWS during workshop). Reset password for first time. 
+Login to AWS account (we are going to provide access to AWS during workshop). Reset password for first time. 
 
-Create a new AWS accessKey and download *accessKeys.csv* to your user home directory. 
+Create a new AWS accessKey and download **accessKeys.csv** to your user home directory. 
 
 ### Create GitHub Personal access token (required to create github webhooks on jenkins).
 
@@ -106,7 +106,8 @@ Use following link to setup a personal GitHub access token.
 
 https://support.cloudbees.com/hc/en-us/articles/234710368-GitHub-User-Scopes-and-Organization-Permission
 
-Note it down somewhere as it will not be available again. This is required in the setup below. 
+Select **repo** and **admin:repo_hook** for the token scope.
+Note the toekn down somewhere as it will not be available again. This is required in the setup below. 
 
 ### Setup workspace config
 
@@ -199,7 +200,7 @@ vagrant ➜  sed -i "s|${PREVIOUS_UNIQUE_ID}|${NEW_UNIQUE_ID}|g" ../terraform/je
 
 open `expertalk-2018-ecs-workshop` as project in your IDE.
 open file `expertalk-2018-ecs-workshop/terraform/jenkins/main.tf`
-Put in your unique name (possibly same as your AWS username) at the place of *${unique}* in the following code:
+Put in your unique name (possibly same as your AWS username) at the place of **${unique}** in the following code:
 
 ```HCL
 backend "s3" {
@@ -250,18 +251,24 @@ aws_iam_role.jenkins_instance_ec2: Creating...
 
 ### Access jenkins
 
-Now your jenkins should be available at :
+Now your jenkins should be available at (it might take some time) :
 
 https://{your-unique-name}-jenkins.ecsworkshop2018.online/
 
-## Pre-workshop tasks (for instructor)
+### Provide Jenkins access to push to your repository
 
-### Create AWS users for workshop candidates
-
-### Create state bucket
-
-### Create VPC
-
-```bash
-
+```console
+(venv) vagrant ➜  cat ~/.ssh/id_rsa.pub
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDJX3+f6QNMfJ87hoomn2j+593dJP0LxNLOyqVCOGg0cZ0HGZkFiXeA2ElnnBtJn4zqw5kL0ANTlRk3nCiW8qF63HWlbRX9+LioRxDL/j33+ajkn3jfxOBFvXDmXSMNY/qxsKVRnkp588FSiW4ODgbYp6c4vtP+VxojgeBIEX56oYqMRd7+6hgEYdyBcFD7oW/509QfXvV9q9RhkOV7jkMxbodsf9qHXvYSOTNW9VOe7XWk95qvaHrrbJIUTLKhFCZxKIDvrpy4a5NtTk2RDvgGwoafpdT3gW/fJU4Qbg43Hum7um/OS0xRGxBswfvlTWOyrR2jkprjbT36ONHW+oGPVMrC3l...
+...
+y+SGYaE1svLPl7yYBA1o8i9rgkrelefOxMI/wdvxxxYNm7zvFi/DOaXCL4VD7G4L+HHVEQJupgkxGpKAirnQ== youremail@provider.com
 ```
+Copy the entire content of the ssh public key and add it to your github account.
+Follow steps from here (from step 2):
+https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
+
+## Overview of the 
+
+## Exercises
+
+### Exercise 1 - Containerize Odin service.
