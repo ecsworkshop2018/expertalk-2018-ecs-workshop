@@ -269,12 +269,12 @@ https://help.github.com/articles/adding-a-new-ssh-key-to-your-github-account/
 
 ## Overview of the Example - Asgard portal
 
-Its provides details about the Asgard gods. Currently Odin and Thor. 
+Our application name is *Asgard*. Its provides details about the Asgard gods. Currently Odin and Thor. 
 Since we are using microservices architecture we have seperate services for the Odin and thor. 
 
 ## Exercises
 
-### Exercise 1 - Containerize Odin service.
+### Exercise 0 - Containerize Odin service.
 
 We will
 - Run Odin service locally. 
@@ -282,3 +282,25 @@ We will
 - Run the docker file locally to test it.
 - Create a jenkins build to create Odin service's docker image and push to ECR. 
 - This pipeline will run for every commit of the Odin's service.
+
+### Exercise 1 - Infrastructure for Asgard services - Single instance cluster
+
+Refer: https://github.com/ecsworkshop2018/asgard-infrastructure/blob/master/exercise1/README.md
+
+### Exercise 2 - Infrastructure for Asgard services - Single instance ASG cluster
+
+Refer: https://github.com/ecsworkshop2018/asgard-infrastructure/blob/master/exercise2/README.md
+
+### Exercise 3 - Infrastructure for Asgard services - Route53 + ALB (load balancer) + ASG + cluster.
+
+Refer: https://github.com/ecsworkshop2018/asgard-infrastructure/blob/master/exercise3/README.md
+
+### Exercise 4 - Deploy Odin service to Asgard application cluster
+
+Refer: https://github.com/ecsworkshop2018/odin-infrastructure/blob/master/README.md
+
+### Exercise 5 - Deploy Thor service to Asgard cluster
+
+Execute the terraform/Jenkins job to deploy service thor. 
+
+### Exercise 6 - 
