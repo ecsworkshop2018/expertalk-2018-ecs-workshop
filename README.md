@@ -70,3 +70,77 @@ check whether dos2unix is installed
 ```bash
 which dos2unix
 ```
+
+## Setup steps during workshop
+
+### Fork ecsworkshop repositories
+
+Fork following repositories to your github user
+
+https://github.com/ecsworkshop2018/expertalk-2018-ecs-workshop
+https://github.com/ecsworkshop2018/seed_job
+https://github.com/ecsworkshop2018/odin
+
+### Clone repositories
+
+Open terminal or git bash (*on host machine not VM*)
+
+```bash
+➜  cd ecsworkshop/
+➜  git clone git@github.com:prashant-ee/expertalk-2018-ecs-workshop.git
+Cloning into 'expertalk-2018-ecs-workshop'...
+```
+
+### Download aws access key details (required to configure AWS cli later).
+
+Login to AWS account. Reset password for first time. 
+
+Create a new AWS accessKey and download *accessKeys.csv* to your user home directory. 
+
+### Create GitHub Personal access token (required to create github webhooks on jenkins).
+
+Use following link to setup a personal GitHub access token.
+
+https://support.cloudbees.com/hc/en-us/articles/234710368-GitHub-User-Scopes-and-Organization-Permission
+
+### Setup workspace config
+
+Go to workspace config template and copy it to user home directory.
+
+```bash
+➜  cd ecsworkshop/
+➜  cd expertalk-2018-ecs-workshop/
+➜  cd docker_dev_vagrant/
+➜  cp workspace_config.template ~/workspace_config
+```
+Open ~/workspace_config in any text editor of your choise. Add required information.
+
+```
+FIRST_NAME="<your first name>"
+JENKINS_USER_NAME="<your jenkins user name>"
+JENKINS_PASSWORD="<your jenkins password>"
+GITHUB_USER_NAME="<your github user name>"
+GITHUB_USER_EMAIL="<your github user email>"
+GITHUB_ACCESS_TOKEN="<your github personal access token>"
+SEED_JOB_REPO_URL="<your seed job repo url>"
+```
+Details:
+FIRST_NAME - make sure this is unique, prefer to put the AWS username for this. 
+JENKINS_USER_NAME - Choose a name of your Jenkins admin (every participant will have his own Jenkins). 
+JENKINS_PASSWORD - Choose a password for your Jenkins admin user.  
+GITHUB_USER_NAME - 
+GITHUB_USER_EMAIL
+GITHUB_ACCESS_TOKEN
+SEED_JOB_REPO_URL
+
+## Pre-workshop tasks (for instructor)
+
+### Create AWS users for workshop candidates
+
+### Create state bucket
+
+### Create VPC
+
+```bash
+
+```
