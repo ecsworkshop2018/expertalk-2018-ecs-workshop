@@ -141,3 +141,6 @@ docs/_build/
 /jenkins_docker/github_ssh_private_key
 base_vagrant/ecsworkshop.box
 base_vagrant/playbook.retry
+
+*venv
+*.terraform

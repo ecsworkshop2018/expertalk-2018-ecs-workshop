@@ -1,0 +1,1 @@
+This file is added to push the state_backup folder to git.
